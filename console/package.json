@@ -1,0 +1,16 @@
+{
+  "name": "consoleconnect4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^12.12.5",
+    "typescript": "^3.6.4"
+  }
+}
