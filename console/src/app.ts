@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Bot } from "./shared/bot";
 import { McstBot } from "./mcst/mcst";
 import { Game } from "./shared/game";
