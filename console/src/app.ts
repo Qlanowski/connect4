@@ -69,12 +69,12 @@ function run(columns: number, rows: number, inRowForWin: number, botId: number, 
         }
         else {
             let move = -1;
-            setTimeout(() => {
-                if (move === -1) {
-                    console.log("Bot lost on time.\n");
-                    return;
-                }
-            }, timeout);
+            // setTimeout(() => {
+            //     if (move === -1) {
+            //         console.log("Bot lost on time.\n");
+            //         return;
+            //     }
+            // }, timeout);
 
             move = bot.makeMove();
             game.move(move, turn);
@@ -95,7 +95,14 @@ function readArgs() {
         let timeout: number = +args.timeout;
         run(columns, rows, inRowForWin, botId, turn, timeout);
     } else {
-        printHelp();
+        let columns = 5;
+        let rows = 4;
+        let inRowForWin = 3;
+        let botId = 0;
+        let turn = 0;
+        let timeout = 1000;
+        run(columns, rows, inRowForWin, botId, turn, timeout);
+        //printHelp();
     }
 }
 
