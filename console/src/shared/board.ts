@@ -14,6 +14,9 @@ export class Board {
     public get board(): Player[][] {
         return JSON.parse(JSON.stringify(this._board));
     }
+    public get heights(): number[] {
+        return JSON.parse(JSON.stringify(this._heights));
+    }
     public get rows(): number {
         return this._rows;
     }
@@ -54,6 +57,7 @@ export class Board {
         this._board[col][height] = player;
         this._lastX = col;
         this._lastY = height;
+        this._result = this.getResult();
     }
 
     public getResult(): Result {

@@ -27,17 +27,13 @@ export class McstBot implements Bot {
         }
     }
     public makeMove(): number {
-        return this.mcts();
-    }
-
-    private mcts(): number {
         let start = new Date().getTime();
         while (new Date().getTime() - start < this.timeout) {
             let node = this.node;
             let board: Board = this.currentBoard.clone();
 
             //selection
-            while (node.untriedMoves.length === 0 && node.childNodes.length > 0) {//jeśli aktualny node ma wszystkie ruchy odwiedzone przynajmniej raz
+            while (node.untriedMoves.length === 0 && node.childNodes.length > 0) {//wszystkie ruchy wypróbowane z tego noda
                 node = node.selection();
                 board.move(node.move, node.player);
             }
@@ -68,11 +64,11 @@ export class McstBot implements Bot {
                     points = 0;
                     break;
                 case Result.WonPlayer1:
-                    points = -1;
+                    points = 0;
                     break;
             }
             //backpropagate
-            while (node.parent !== null) {
+            while (node !== null) {
                 node.update(points);
                 node = node.parent;
             }
@@ -80,8 +76,10 @@ export class McstBot implements Bot {
 
         let foo = (x: Node) => x.wins / x.visits;
         let bestNode = this.node.childNodes.reduce((prev, current) => (foo(prev) > foo(current)) ? prev : current);
-        console.log(bestNode.wins, bestNode.visits);
+        console.log(bestNode.wins, bestNode.visits, bestNode.wins / bestNode.visits);
+        console.log("Move: " + bestNode.move);
         this.node = bestNode;
+        bestNode.parent = null;
         return bestNode.move;
     }
 }
@@ -105,10 +103,7 @@ export class Node {
         this.player = player;
     }
     ucb(): number {
-        if (this.visits != 0) {
-            return this.wins / this.visits + Math.sqrt(2 * Math.log(this.parent.visits) / this.visits);
-        }
-        return Number.MAX_VALUE;
+        return this.wins / this.visits + Math.sqrt(2 * Math.log(this.parent.visits) / this.visits);
     }
     selection(): Node {
         return this.childNodes.reduce((prev, current) => (prev.ucb() > current.ucb()) ? prev : current);
