@@ -15,7 +15,7 @@ export class Board {
         return JSON.parse(JSON.stringify(this._board));
     }
     public get heights(): number[] {
-        return JSON.parse(JSON.stringify(this._heights));
+        return [...this.heights];
     }
     public get rows(): number {
         return this._rows;

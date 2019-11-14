@@ -1,14 +1,6 @@
 import * as React from 'react';
+import { GameBoard } from './game-board/game-board';
 
-
-class App extends React.Component<{}, {}> {
-  render() {
-    return (<div>
-      <h1>Welcome to React with Typescript</h1>
-      <p>The color of this page is:</p>
-    </div>
-    );
-  }
-}
+const App: React.FC = () => <GameBoard></GameBoard>
 
 export default App;
