@@ -2,7 +2,7 @@ import { Board } from "./board";
 import { Player } from "./player";
 import { Result } from "./result";
 export class Game {
-    private board: Board;
+    public board: Board;
 
     constructor(columns: number, rows: number, inRow: number) {
         let board = new Array(columns).fill(0).map(() => Array(rows).fill(Player.None));
@@ -31,10 +31,10 @@ export class Game {
                 console.log("Draw");
                 break;
             case Result.WonPlayer0:
-                console.log("Human Won");
+                console.log("Player 0 Won");
                 break;
             case Result.WonPlayer1:
-                console.log("Bot won");
+                console.log("Player 1 Won");
                 break;
             default:
                 console.log("Game is on, why are you asking who win?!");

@@ -69,7 +69,6 @@ export class McstBot implements Bot {
         for (let child of this.node.childNodes) {
             console.log(child.move, child.wins, child.visits, child.wins / child.visits);
         }
-        console.log("Move: " + bestNode.move);
         this.node = bestNode;
         bestNode.parent = null;
         this.currentBoard.move(bestNode.move, Player.Player0);
