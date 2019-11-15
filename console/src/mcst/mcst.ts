@@ -2,7 +2,6 @@ import { Bot } from "../shared/bot";
 import { Player } from "../shared/player";
 import { Board } from "../shared/board";
 import { Result } from "../shared/result";
-import { Game, printBoard } from "../shared/game";
 
 export class McstBot implements Bot {
     //Bot is Player 0
@@ -27,7 +26,6 @@ export class McstBot implements Bot {
         else {
             this.node = new Node(move, null, this.currentBoard.allowedMoves(), Player.Player1);
         }
-        this.print();
     }
     public makeMove(): number {
         let start = new Date().getTime();
@@ -58,7 +56,6 @@ export class McstBot implements Bot {
                 nextPlayer = nextPlayer === Player.Player0 ? Player.Player1 : Player.Player0;
                 result = board.getResult();
             }
-            //let points: number = result === Result.WonPlayer0 ? 1 : 0;
             //backpropagate
             while (node !== null) {
                 node.update(result);
@@ -68,23 +65,16 @@ export class McstBot implements Bot {
 
         let foo = (x: Node) => x.wins / x.visits;
         let bestNode = this.node.childNodes.reduce((prev, current) => (foo(prev) > foo(current)) ? prev : current);
-        console.log("### after while ####");
+        console.log("### percentages ####");
         for (let child of this.node.childNodes) {
             console.log(child.move, child.wins, child.visits, child.wins / child.visits);
         }
         console.log("Move: " + bestNode.move);
-        this.print();
         this.node = bestNode;
         bestNode.parent = null;
-        //console.log(bestNode.childNodes);
         this.currentBoard.move(bestNode.move, Player.Player0);
 
         return bestNode.move;
-    }
-    print() {
-        // console.log("Start Bot board ###############");
-        // printBoard(this.currentBoard);
-        // console.log("End Bot board ###############");
     }
 }
 
