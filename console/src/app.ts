@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Bot } from "./shared/bot";
 import { McstBot } from "./mcst/mcst";
+import { PnsBot } from "./pns/pns";
 import { Game } from "./shared/game";
 import * as ReadLine from "readline-sync"
 import minimist from "minimist";
@@ -52,6 +53,9 @@ function run(columns: number, rows: number, inRowForWin: number, botId: number, 
     switch (botId) {
         case 0:
             bot = new McstBot(columns, rows, inRowForWin, timeout);
+            break;
+        case 1:
+            bot = new PnsBot(columns, rows, inRowForWin, timeout);
             break;
         default:
             bot = new McstBot(columns, rows, inRowForWin, timeout);
