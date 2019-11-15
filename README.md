@@ -11,8 +11,8 @@ where:
 - columns: columns on board
 - rows: rows on board
 - forWin: count of checkers in a row for win
-- bot0Id: selecting bot to play with 0,1,2
-- bot1Id: selecting bot to play with 0,1,2
+- bot0Id: selecting bot 0,1,2,3
+- bot1Id: selecting bot 0,1,2,3
 - turn: who starts 0-bot0  1-bot1
 - timeout: time for bot to think in milliseconds
 
