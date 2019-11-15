@@ -80,6 +80,7 @@ export class McstBot implements Bot {
         console.log("Move: " + bestNode.move);
         this.node = bestNode;
         bestNode.parent = null;
+        this.currentBoard.move(bestNode.move, bestNode.player);
         return bestNode.move;
     }
 }
