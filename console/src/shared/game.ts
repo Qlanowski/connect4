@@ -43,25 +43,29 @@ export class Game {
     }
     public printBoard(): void {
         console.log("Current Position:");
-        for (let y = this.board.rows - 1; y >= 0; y--) {
-            for (let x = 0; x < this.board.columns; x++) {
-                switch (this.board.board[x][y]) {
-                    case Player.None:
-                        process.stdout.write("-");
-                        break;
-                    case Player.Player0:
-                        process.stdout.write("O");
-                        break;
-                    case Player.Player1:
-                        process.stdout.write("X");
-                        break;
-                }
-            }
-            process.stdout.write("\n");
-        }
-        for (let x = 0; x < this.board.columns; x++) {
-            process.stdout.write(x.toString());
-        }
-        console.log("\n");
+        printBoard(this.board);
     }
+}
+
+export function printBoard(board: Board): void {
+    for (let y = board.rows - 1; y >= 0; y--) {
+        for (let x = 0; x < board.columns; x++) {
+            switch (board.board[x][y]) {
+                case Player.None:
+                    process.stdout.write("-");
+                    break;
+                case Player.Player0:
+                    process.stdout.write("O");
+                    break;
+                case Player.Player1:
+                    process.stdout.write("X");
+                    break;
+            }
+        }
+        process.stdout.write("\n");
+    }
+    for (let x = 0; x < board.columns; x++) {
+        process.stdout.write(x.toString());
+    }
+    console.log("\n");
 }
