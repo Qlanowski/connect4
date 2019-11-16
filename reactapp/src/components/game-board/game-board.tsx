@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Player } from '../../models/imported';
 import { Tile } from '../../models/tile';
 import { GameBoardColumn } from './game-board-column/game-board-column';
-import { Game } from '../../models/game';
+import { GameState } from '../../models/game-state';
 import { gameStateMoveMadeActionCreator, gameStateGameStartedActionCreator } from '../../redux/reducers/game-state-reducer/game-state-action-creators';
 
 const GameBoardContainer = styled.div
@@ -21,17 +21,12 @@ interface GameBoardProps {
     board: Tile[][];
     playerMoving: Player;
     makeMove: (column: number) => void;
-    startGame: (rows: number, columns: number) => void;
 }
 
-const GameBoardDisconnected: React.FC<GameBoardProps> = ({ board, playerMoving, makeMove, startGame }) => {
-    const ROWS = 5, COLS = 5;
+const GameBoardDisconnected: React.FC<GameBoardProps> = ({ board, playerMoving, makeMove }) => {
     const handleColumnClick = (column: number): void => {
         makeMove(column);
     }
-    React.useEffect(() => {
-        startGame(ROWS, COLS)
-    }, []);
     return (
         <GameBoardContainer>
             {
@@ -42,17 +37,16 @@ const GameBoardDisconnected: React.FC<GameBoardProps> = ({ board, playerMoving, 
         ;
 }
 
-const mapStateToProps = (store: Game) => {
+const mapStateToProps = (store: GameState) => {
     return {
-        board: store.gameState.board,
-        playerMoving: store.gameState.playerMoving
+        board: store.board,
+        playerMoving: store.playerMoving
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         makeMove: (col: number) => dispatch(gameStateMoveMadeActionCreator(col)),
-        startGame: (rows: number, columns: number) => dispatch(gameStateGameStartedActionCreator(rows, columns))
     }
 }
 

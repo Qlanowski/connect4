@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import { Tile } from '../../../models/tile';
+import { GameConfig } from '../../../models/game-config';
 
 export enum GAME_STATE_ACTION_TYPE {
     MOVE_MADE = 'MOVE_MADE', GAME_STARTED = 'GAME_STARTED'
@@ -8,7 +9,7 @@ export enum GAME_STATE_ACTION_TYPE {
 
 
 export interface GameStateGameStartedAction extends Action<GAME_STATE_ACTION_TYPE.GAME_STARTED> {
-    initialBoard: Tile[][];
+    newConfig: GameConfig;
 }
 
 export interface GameStateMoveMadeAction extends Action<GAME_STATE_ACTION_TYPE.MOVE_MADE> {

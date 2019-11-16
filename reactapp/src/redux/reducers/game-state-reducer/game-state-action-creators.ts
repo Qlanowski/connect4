@@ -1,6 +1,6 @@
 import { ActionCreator } from 'redux';
 import { GameStateMoveMadeAction, GameStateGameStartedAction, GAME_STATE_ACTION_TYPE } from './game-state-actions';
-import { Player } from '../../../models/imported';
+import { GameConfig } from '../../../models/game-config';
 
 export const gameStateMoveMadeActionCreator: ActionCreator<GameStateMoveMadeAction> = (column: number): GameStateMoveMadeAction => {
     return {
@@ -9,12 +9,11 @@ export const gameStateMoveMadeActionCreator: ActionCreator<GameStateMoveMadeActi
     };
 };
 
-export const gameStateGameStartedActionCreator: ActionCreator<GameStateGameStartedAction> = (rows: number, columns: number): GameStateGameStartedAction => {
-    const nullArr = Array(rows).fill(0).map(row => Array(columns).fill(null));
-    const initialBoard = nullArr.map(row => row.map(x => ({playerOcupping: Player.None, isWinningMove: false})));
-
+export const gameStateGameStartedActionCreator: ActionCreator<GameStateGameStartedAction> = (newConfig: GameConfig): GameStateGameStartedAction => {
+    // const nullArr = Array(rows).fill(0).map(row => Array(columns).fill(null));
+    // const initialBoard = nullArr.map(row => row.map(x => ({playerOcupping: Player.None, isWinningMove: false})));
     return {
         type: GAME_STATE_ACTION_TYPE.GAME_STARTED,
-        initialBoard
+        newConfig
     };
 };
