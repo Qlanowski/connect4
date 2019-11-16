@@ -19,8 +19,8 @@ export class MinMaxBot implements Bot {
     }
 
     makeMove(): number {
-        let bestScore = -1;
-        let bestMove = -1;
+        let bestScore = Number.MIN_VALUE;
+        let bestMove = Number.MIN_VALUE;
         let allowedMoves = this.currentBoard.allowedMoves();
         allowedMoves.forEach(move => {
             let board = this.currentBoard.clone();
