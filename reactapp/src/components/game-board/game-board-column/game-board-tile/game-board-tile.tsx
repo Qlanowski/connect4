@@ -1,14 +1,11 @@
+import { Tile } from "../../../../models/tile";
 import { Player } from "../../../../models/imported";
 import * as React from 'react';
 import styled from 'styled-components';
 
 export interface GameBoardTileProps {
-    player: Player;
+    tile: Tile;
 };
-
-interface GameBoardCircleProps {
-    circleColor: string;
-}
 
 const GameBoardTileContainer = styled.div`
     background-color: #4d66a3;
@@ -23,7 +20,7 @@ const GameBoardCircle = styled.div`
     background-color: ${props => props.circleColor};
 `;
 
-export const GameBoardTile: React.FC<GameBoardTileProps> = ({player}: GameBoardTileProps) => {
+export const GameBoardTile: React.FC<GameBoardTileProps> = ({tile}) => {
     const getTileCircleColor = (player: Player): string => {
         switch (player) {
             case Player.Player0:
@@ -34,7 +31,7 @@ export const GameBoardTile: React.FC<GameBoardTileProps> = ({player}: GameBoardT
                 return 'white';
         }
     }
-    const tileCircleColor = getTileCircleColor(player);
+    const tileCircleColor = getTileCircleColor(tile.playerOcupping);
     return (
     <GameBoardTileContainer>
         <GameBoardCircle circleColor={tileCircleColor}></GameBoardCircle>

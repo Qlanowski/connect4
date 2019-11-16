@@ -3,4 +3,5 @@ export enum Result {
     WonPlayer1 = 1,
     Draw = 2,
     GameOn = 3,
+    NotStarted = 4
 }

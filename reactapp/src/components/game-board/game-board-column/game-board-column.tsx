@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Player } from '../../../models/imported';
 import { GameBoardTile } from './game-board-tile/game-board-tile';
+import { Tile } from '../../../models/tile';
 
 const GameBoardColumnContainer = styled.div`
     flex: 1;
@@ -11,15 +11,16 @@ const GameBoardColumnContainer = styled.div`
 `;
 
 export interface GameBoardColumnProps  {
-    tiles: Player[];
-    handleClick: (tiles: Player[]) => void;
+    tiles: Tile[];
+    column: number;
+    handleClick: (column: number) => void;
 };
 
-export const GameBoardColumn: React.FC<GameBoardColumnProps> = ({tiles, handleClick}: GameBoardColumnProps) => {
+export const GameBoardColumn: React.FC<GameBoardColumnProps> = ({tiles, column, handleClick}: GameBoardColumnProps) => {
     return (
-    <GameBoardColumnContainer onClick={() => handleClick(tiles)}>
+    <GameBoardColumnContainer onClick={() => handleClick(column)}>
         {
-            tiles.map((tile, index) => <GameBoardTile player={tile} key={index}></GameBoardTile>)
+            tiles.map((tile, index) => <GameBoardTile tile={tile} key={index}></GameBoardTile>)
         }
     </GameBoardColumnContainer>
     );
