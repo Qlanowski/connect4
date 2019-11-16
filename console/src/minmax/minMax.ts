@@ -5,6 +5,8 @@ import { MinMaxHeuristic } from "./heuristics/minMaxHeuristic";
 
 export class MinMaxBot implements Bot {
     // Bot is Player 0 - no idea why I have to assume that
+    private readonly myPlayer: Player = Player.Player0;
+    private readonly opponentPlayer: Player = Player.Player1;
     private timeout: number
     private currentBoard: Board;
     private heuristic: MinMaxHeuristic;
@@ -17,7 +19,7 @@ export class MinMaxBot implements Bot {
     }
 
     playerMove(move: number): void {
-        this.currentBoard.move(move, Player.Player1);
+        this.currentBoard.move(move, this.opponentPlayer);
     }
 
     makeMove(): number {
@@ -26,8 +28,8 @@ export class MinMaxBot implements Bot {
         let allowedMoves = this.currentBoard.allowedMoves();
         allowedMoves.forEach(move => {
             let board = this.currentBoard.clone();
-            board.move(move, Player.Player0);
-            let score = this.heuristic.getScore(board);
+            board.move(move, this.myPlayer);
+            let score = this.heuristic.getScore(board, this.myPlayer);
             if(bestScore < score) {
                 bestScore = score;
                 bestMove = move;
