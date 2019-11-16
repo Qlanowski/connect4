@@ -1,3 +1,3 @@
 export enum PlayerType {
-    Ai, Human
+    Ai = "Ai", Human = "Human"
 }
