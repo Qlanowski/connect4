@@ -23,9 +23,9 @@ export class MinMaxBot implements Bot {
         let bestMove = -1;
         let allowedMoves = this.currentBoard.allowedMoves();
         allowedMoves.forEach(move => {
-            this.currentBoard.move(move, Player.Player0);
-            let score = this.heuristic.getScore(this.currentBoard);
-            this.currentBoard.undoMove(move);
+            let board = this.currentBoard.clone();
+            board.move(move, Player.Player0);
+            let score = this.heuristic.getScore(board);
             if(bestScore < score) {
                 bestScore = score;
                 bestMove = move;
