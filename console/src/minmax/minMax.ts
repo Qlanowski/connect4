@@ -1,7 +1,7 @@
 import { Bot } from "../shared/bot";
 import { Board } from "../shared/board";
 import { Player } from "../shared/player";
-import { MinMaxHeuristic } from "./minMaxHeuristic";
+import { MinMaxHeuristic } from "./heuristics/minMaxHeuristic";
 
 export class MinMaxBot implements Bot {
     // Bot is Player 0 - no idea why I have to assume that
