@@ -1,11 +1,10 @@
 import { MinMaxHeuristic } from "./minMaxHeuristic";
 import { Board } from "../../shared/board";
 import { Player } from "../../shared/player";
-import { Result } from "../../shared/result";
 import { BoardHelper } from "../boardHelper";
 
 export class BasicMinMaxHeuristic implements MinMaxHeuristic {
-    getScore(board: Board, player: Player): number {
+    public getScore(board: Board, player: Player): number {
         let allowedMoves = board.allowedMoves();
         allowedMoves.forEach(move => {
             if (BoardHelper.isWinningMove(board, move, player)) {
@@ -17,9 +16,9 @@ export class BasicMinMaxHeuristic implements MinMaxHeuristic {
         allowedMoves.forEach(move => {
             let clonedBoard = board.clone();
             clonedBoard.move(move, player);
-            let actualScore = this.getScore(clonedBoard, BoardHelper.getOpponent(player));
+            let actualScore = -this.getScore(clonedBoard, BoardHelper.getOpponent(player));
             if (actualScore > actualBestScore) {
-                actualBestScore = actualScore
+                actualBestScore = actualScore;
             }
         });
 
