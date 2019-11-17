@@ -1,21 +1,20 @@
 import { Bot } from "../shared/bot";
 import { Board } from "../shared/board";
 import { Player } from "../shared/player";
-import { MinMaxHeuristic } from "./heuristics/minMaxHeuristic";
+import { MinMaxAlgorithm } from "./minMaxAlgoritm";
 
 export class MinMaxBot implements Bot {
     // Bot is Player 0 - no idea why I have to assume that
     private readonly myPlayer: Player = Player.Player0;
     private readonly opponentPlayer: Player = Player.Player1;
-    private timeout: number
     private currentBoard: Board;
-    private heuristic: MinMaxHeuristic;
+    private algoritm: MinMaxAlgorithm;
 
     constructor(columns: number, rows: number, inRow: number, timeout: number) {
-        this.timeout = timeout;
         let boardArr: Player[][] = new Array(columns).fill(0).map(() => Array(rows).fill(Player.None));
         let heights: number[] = new Array(columns).fill(0);
         this.currentBoard = new Board(columns, rows, inRow, boardArr, heights);
+        this.algoritm = new MinMaxAlgorithm(timeout, 10);
     }
 
     playerMove(move: number): void {
@@ -29,7 +28,7 @@ export class MinMaxBot implements Bot {
         allowedMoves.forEach(move => {
             let board = this.currentBoard.clone();
             board.move(move, this.myPlayer);
-            let score = this.heuristic.getScore(board, this.myPlayer);
+            let score = this.algoritm.getScore(board, this.myPlayer);
             if(bestScore < score) {
                 bestScore = score;
                 bestMove = move;

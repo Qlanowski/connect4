@@ -6,6 +6,7 @@ import { Game } from "./shared/game";
 import * as ReadLine from "readline-sync"
 import minimist from "minimist";
 import { HumanBot } from "./shared/human";
+import { MinMaxBot } from "./minmax/minMaxBot";
 
 type ArgumentsShape = {
     columns: string;
@@ -59,6 +60,9 @@ function pickBot(id: number, game: Game, columns: number, rows: number, inRowFor
             bot = new PnsBot(columns, rows, inRowForWin, timeout);
             break;
         case 2:
+            bot = new MinMaxBot(columns, rows, inRowForWin, timeout);
+            break;
+        case 3:
             bot = new HumanBot(game.board);
             break;
         default:
