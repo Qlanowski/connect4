@@ -21,6 +21,7 @@ export class McstBot implements Bot {
         let newNode = this.node.childNodes.find(n => n.move === move);
         if (newNode) {
             this.node = newNode;
+            this.node.parent = null;
         }
         else {
             this.node = new Node(move, null, this.currentBoard.allowedMoves(), Player.Player1);
@@ -32,8 +33,8 @@ export class McstBot implements Bot {
             let node = this.node;
             let board: Board = this.currentBoard.clone();
 
-            //selection
-            while (node.untriedMoves.length === 0 && node.childNodes.length > 0) {//wszystkie ruchy wypróbowane z tego noda
+            //selection # keep going down the tree based on best UCB values until terminal or unexpanded node
+            while (node.untriedMoves.length === 0 && node.childNodes.length > 0) {
                 node = node.selection();
                 board.move(node.move, node.player);
             }
@@ -55,31 +56,23 @@ export class McstBot implements Bot {
                 nextPlayer = nextPlayer === Player.Player0 ? Player.Player1 : Player.Player0;
                 result = board.getResult();
             }
-            let points: number;
-            switch (result) {
-                case Result.WonPlayer0:
-                    points = 1;
-                    break;
-                case Result.Draw:
-                    points = 0;
-                    break;
-                case Result.WonPlayer1:
-                    points = 0;
-                    break;
-            }
             //backpropagate
             while (node !== null) {
-                node.update(points);
+                node.update(result);
                 node = node.parent;
             }
         }
 
         let foo = (x: Node) => x.wins / x.visits;
         let bestNode = this.node.childNodes.reduce((prev, current) => (foo(prev) > foo(current)) ? prev : current);
-        console.log(bestNode.wins, bestNode.visits, bestNode.wins / bestNode.visits);
-        console.log("Move: " + bestNode.move);
+        console.log("### percentages ####");
+        for (let child of this.node.childNodes) {
+            console.log(child.move, child.wins, child.visits, child.wins / child.visits);
+        }
         this.node = bestNode;
         bestNode.parent = null;
+        this.currentBoard.move(bestNode.move, Player.Player0);
+
         return bestNode.move;
     }
 }
@@ -90,6 +83,7 @@ export class Node {
     untriedMoves: number[];
     childNodes: Node[];
     wins: number;
+    lost: number;
     visits: number;
     player: Player;
 
@@ -98,23 +92,40 @@ export class Node {
         this.untriedMoves = untriedMoves;
         this.childNodes = [];
         this.wins = 0;
+        this.lost = 0;
         this.visits = 0;
         this.move = move;
         this.player = player;
     }
     ucb(): number {
-        return this.wins / this.visits + Math.sqrt(2 * Math.log(this.parent.visits) / this.visits);
+        //return -this.visits;
+        if (this.player === Player.Player0) {
+            return this.wins / this.visits + Math.sqrt(2 * Math.log(this.parent.visits) / this.visits);
+        }
+        else {
+            return this.lost / this.visits + Math.sqrt(2 * Math.log(this.parent.visits) / this.visits);
+        }
     }
     selection(): Node {
         return this.childNodes.reduce((prev, current) => (prev.ucb() > current.ucb()) ? prev : current);
     }
 
-    update(result: number): void {
-        this.wins += result;
+    update(result: Result): void {
+        switch (result) {
+            case Result.WonPlayer0:
+                this.wins += 1;
+                break;
+            case Result.WonPlayer1:
+                this.lost += 1;
+                break;
+        }
         this.visits += 1;
     }
 }
 
 function selectRandom(arr: number[]): number {
     return arr[Math.floor(Math.random() * arr.length)];
+}
+function round(num: number): number {
+    return Math.round(num * 100) / 100;
 }

@@ -1,21 +1,24 @@
 #!/usr/bin/env node
 import { Bot } from "./shared/bot";
 import { McstBot } from "./mcst/mcst";
+import { PnsBot } from "./pns/pns";
 import { Game } from "./shared/game";
 import * as ReadLine from "readline-sync"
 import minimist from "minimist";
+import { HumanBot } from "./shared/human";
 
 type ArgumentsShape = {
     columns: string;
     rows: string;
     forWin: string;
-    botId: string;
+    bot0Id: string;
+    bot1Id: string;
     turn: string;
     timeout: string;
 };
 const args = minimist<ArgumentsShape>(process.argv.slice(2), {
     boolean: ["help"],
-    string: ["columns", "rows", "forWin", "botId", "turn", "timeout"]
+    string: ["columns", "rows", "forWin", "bot0Id", "bot1Id", "turn", "timeout"]
 });
 
 function printHelp(): void {
@@ -25,13 +28,14 @@ function printHelp(): void {
     console.log("--columns    columns on board");
     console.log("--rows       rows on board");
     console.log("--forWin     count of checkers in row for win");
-    console.log("--botId      selecting bot to play with");
-    console.log("--turn       who starts 0-human 1-bot");
+    console.log("--bot0Id      selecting bot0 to play with");
+    console.log("--bot1Id      selecting bot1 to play with");
+    console.log("--turn       who starts 0-bot0 1-bot1");
     console.log("--timeout    time for bot to think in milliseconds");
     console.log("");
 }
 
-function readNumber(text: string, allowedvalues: number[]): number {
+export function readNumber(text: string, allowedvalues: number[]): number {
     while (true) {
         try {
             let strNum = ReadLine.question(text);
@@ -45,30 +49,41 @@ function readNumber(text: string, allowedvalues: number[]): number {
         }
     }
 }
-
-function run(columns: number, rows: number, inRowForWin: number, botId: number, turn: number, timeout: number) {
+function pickBot(id: number, game: Game, columns: number, rows: number, inRowForWin: number, timeout: number): Bot {
     let bot: Bot;
-
-    switch (botId) {
+    switch (id) {
         case 0:
             bot = new McstBot(columns, rows, inRowForWin, timeout);
             break;
+        case 1:
+            bot = new PnsBot(columns, rows, inRowForWin, timeout);
+            break;
+        case 2:
+            bot = new HumanBot(game.board);
+            break;
         default:
-            bot = new McstBot(columns, rows, inRowForWin, timeout);
+            bot = new HumanBot(game.board);
             break;
     }
+    return bot;
+}
+
+function run(columns: number, rows: number, inRowForWin: number, bot0Id: number, bot1Id: number, turn: number, timeout: number) {
     let game: Game = new Game(columns, rows, inRowForWin);
+    let bot0: Bot = pickBot(bot0Id, game, columns, rows, inRowForWin, timeout);
+    let bot1: Bot = pickBot(bot1Id, game, columns, rows, inRowForWin, timeout);
 
     while (game.gameOn()) {
         if (turn === 0) {
-            let move = readNumber("Select column:", game.allowedMoves());
-            bot.playerMove(move);
+            let move = bot0.makeMove();
+            bot1.playerMove(move);
             game.move(move, turn);
             turn = 1;
             game.printBoard();
         }
         else {
-            let move = bot.makeMove();
+            let move = bot1.makeMove();
+            bot0.playerMove(move);
             game.move(move, turn);
             turn = 0;
             game.printBoard();
@@ -78,23 +93,17 @@ function run(columns: number, rows: number, inRowForWin: number, botId: number, 
     game.printWhoWon();
 }
 function readArgs() {
-    if (args.columns && args.rows && args.forWin && args.botId && args.turn && args.timeout) {
+    if (args.columns && args.rows && args.forWin && args.bot0Id && args.bot1Id && args.turn && args.timeout) {
         let columns: number = +args.columns;
         let rows: number = +args.rows;
         let inRowForWin: number = +args.forWin;
-        let botId: number = +args.botId;
+        let bot0Id: number = +args.bot0Id;
+        let bot1Id: number = +args.bot1Id;
         let turn: number = +args.turn;
         let timeout: number = +args.timeout;
-        run(columns, rows, inRowForWin, botId, turn, timeout);
+        run(columns, rows, inRowForWin, bot0Id, bot1Id, turn, timeout);
     } else {
-        let columns = 5;
-        let rows = 4;
-        let inRowForWin = 3;
-        let botId = 0;
-        let turn = 1;
-        let timeout = 1000;
-        run(columns, rows, inRowForWin, botId, turn, timeout);
-        // printHelp();
+        printHelp();
     }
 }
 

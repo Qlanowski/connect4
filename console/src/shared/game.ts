@@ -2,7 +2,7 @@ import { Board } from "./board";
 import { Player } from "./player";
 import { Result } from "./result";
 export class Game {
-    private board: Board;
+    public board: Board;
 
     constructor(columns: number, rows: number, inRow: number) {
         let board = new Array(columns).fill(0).map(() => Array(rows).fill(Player.None));
@@ -31,10 +31,10 @@ export class Game {
                 console.log("Draw");
                 break;
             case Result.WonPlayer0:
-                console.log("Human Won");
+                console.log("Player 0 Won");
                 break;
             case Result.WonPlayer1:
-                console.log("Bot won");
+                console.log("Player 1 Won");
                 break;
             default:
                 console.log("Game is on, why are you asking who win?!");
@@ -43,25 +43,29 @@ export class Game {
     }
     public printBoard(): void {
         console.log("Current Position:");
-        for (let y = this.board.rows - 1; y >= 0; y--) {
-            for (let x = 0; x < this.board.columns; x++) {
-                switch (this.board.board[x][y]) {
-                    case Player.None:
-                        process.stdout.write("-");
-                        break;
-                    case Player.Player0:
-                        process.stdout.write("O");
-                        break;
-                    case Player.Player1:
-                        process.stdout.write("X");
-                        break;
-                }
-            }
-            process.stdout.write("\n");
-        }
-        for (let x = 0; x < this.board.columns; x++) {
-            process.stdout.write(x.toString());
-        }
-        console.log("\n");
+        printBoard(this.board);
     }
+}
+
+export function printBoard(board: Board): void {
+    for (let y = board.rows - 1; y >= 0; y--) {
+        for (let x = 0; x < board.columns; x++) {
+            switch (board.board[x][y]) {
+                case Player.None:
+                    process.stdout.write("-");
+                    break;
+                case Player.Player0:
+                    process.stdout.write("O");
+                    break;
+                case Player.Player1:
+                    process.stdout.write("X");
+                    break;
+            }
+        }
+        process.stdout.write("\n");
+    }
+    for (let x = 0; x < board.columns; x++) {
+        process.stdout.write(x.toString());
+    }
+    console.log("\n");
 }
