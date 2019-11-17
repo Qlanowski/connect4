@@ -27,6 +27,7 @@ export class GameBoardSolverService {
         const firstNoneIndex = board[changedColumnIndex].findIndex(column => column.playerOcupping === Player.None);
         const changedTileYPos = firstNoneIndex !== -1 ? firstNoneIndex - 1 : board[changedColumnIndex].length - 1;
         const changedTilePosition = {x: changedColumnIndex, y: changedTileYPos};
+        
         let columnInfo: ColumnInfo = this.checkBottomTop(board, changedTilePosition, toWin);
         if (columnInfo.maxInOrder >= toWin) {
             return this.columnInfoToWinnerCheckInfo(columnInfo);
@@ -47,11 +48,23 @@ export class GameBoardSolverService {
         if (columnInfo.maxInOrder >= toWin) {
             return this.columnInfoToWinnerCheckInfo(columnInfo);
         }
+        if (changedTileYPos === board[changedColumnIndex].length - 1 && this.checkDraw(board)) {
+            return {
+                result: Result.Draw
+            }
+        }
+
         return {
             result: Result.GameOn
         }
     }
     
+    private checkDraw(board: Tile[][]): boolean {
+        const topRow = board.map(column => column[column.length - 1]);
+        const emptyTiles = topRow.reduce<number>((prev, curr) => curr.playerOcupping === Player.None ? prev + 1 : prev, 0);
+        return emptyTiles === 0;
+    }
+
     private columnInfoToWinnerCheckInfo(columnInfo: ColumnInfo): WinnerCheckInfo {
         return {
             result: columnInfo.playerInStreak === Player.Player0 ? Result.WonPlayer0 : Result.WonPlayer1,

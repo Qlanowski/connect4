@@ -1,5 +1,6 @@
 import { Reducer } from 'redux';
-import { GameStateActions, GAME_STATE_ACTION_TYPE, GameStateGameStartedAction, GameStateMoveMadeAction } from './game-state-actions';
+import { GameStateActions, GAME_STATE_ACTION_TYPE, GameStateNewGameAction,
+    GameStateGameStartedAction, GameStateMoveMadeAction, GameStateGameRestartedAction } from './game-state-actions';
 import { GameState } from '../../../models/game-state';
 import { Player, Result } from '../../../models/imported';
 import { GameBoardSolverService } from '../../../services/game-board-solver-service';
@@ -13,6 +14,10 @@ export const gameStateReducer: Reducer<GameState, GameStateActions> = (state: Ga
             return resolveGameStartedAction(state, action);
         case GAME_STATE_ACTION_TYPE.MOVE_MADE:
             return resolveMoveMadeAction(state, action);
+        case GAME_STATE_ACTION_TYPE.GAME_RESTARTED:
+            return resolveGameRestartedAction(state, action);
+        case GAME_STATE_ACTION_TYPE.NEW_GAME:
+            return resolveNewGameAction(state, action);
     }
     return state;
 }
@@ -27,6 +32,19 @@ function resolveGameStartedAction (state: GameState, action: GameStateGameStarte
         board: initialBoard,
         result: Result.GameOn
     };
+}
+
+function resolveGameRestartedAction(state: GameState, action: GameStateGameRestartedAction): GameState {
+    const board = state.board.map(column => column.map(tile => ({playerOcupping: Player.None, isWinningMove: false})));
+    return {
+        ...state,
+        board,
+        result: Result.GameOn
+    }
+}
+
+function resolveNewGameAction(state: GameState, action: GameStateNewGameAction): GameState {
+    return {...initialGameState};
 }
 
 function resolveMoveMadeAction (state: GameState, action: GameStateMoveMadeAction): GameState {
