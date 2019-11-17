@@ -7,20 +7,29 @@ export class PossibleWinningCountHeuristic implements MinMaxHeuristic {
         throw new Error("Method not implemented.");
     }
     
-    public getMaxScore(board: Board) {
-        throw new Error("Method not implemented.");
+    public getMaxScore(board: Board): number {
+        return Number.POSITIVE_INFINITY;
     }
 
-    private maxVerticalInRow(board: Board, player: Player, x: number, y: number): number {
-        let counter: number = 0;
+    private getVerticalWinPossibiltiesCount(board: Board, player: Player): number {
         let fields = board.board;
-        for(let i = x - 1; i >= 0 && fields[i][y] === player; i--) {
-            counter++;
+        let counter = 0;
+        if (board.rows < board.inRow) {
+            return 0;
         }
-        for(let i = x; i < board.rows && fields[i][y] === player; i++) {
-            counter++;
+        for(let j = 0; j < board.columns; j++) {
+            let height = board.heights[j];
+            if (height === 0 
+                || (fields[height - 1][j] === player 
+                    && board.rows - height >= board.inRow)) {
+                        counter++;
+                    }
         }
         return counter;
+    }
+
+    private getHorizontalWinPossibilitiesCount(board: Board, player: Player): number {
+        
     }
 
 }

@@ -27,6 +27,9 @@ export class Board {
     public get moveCounter(): number {
         return this._moveCounter;
     }
+    public get inRow(): number {
+        return this._inRow;
+    }
 
 
     constructor(columns: number, rows: number, inRow: number, board: Player[][], heights: number[]) {
