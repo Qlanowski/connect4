@@ -10,7 +10,11 @@ interface GameConfigFormProps {
 export const GameConfigForm: React.FC<GameConfigFormProps> = ({ handleSubmit }) => {
     const initialConfig: GameConfig = {
         playerOne: PlayerType.Human, 
-        playerTwo: PlayerType.Human
+        playerTwo: PlayerType.Human,
+        boardColumns: 5,
+        boardRows: 5,
+        milisecondsForAlgorithm: 1000,
+        toWin: 4
     }
     const [formConfig, setFormConfig] = React.useState<GameConfig>(initialConfig);
 
@@ -50,12 +54,12 @@ export const GameConfigForm: React.FC<GameConfigFormProps> = ({ handleSubmit }) 
           onChange={(event) => handleNumberChange(event, "toWin")} />
         </label>
         <label>Player one:
-            <GameConfigPlayerSelect 
+            <GameConfigPlayerSelect initialValue={initialConfig.playerOne}
             handleChange={(playerType) => handlePlayerTypeChange(playerType, "playerOne")}>
             </GameConfigPlayerSelect>
         </label>
         <label>Player two:
-            <GameConfigPlayerSelect 
+            <GameConfigPlayerSelect initialValue={initialConfig.playerTwo}
             handleChange={(playerType) => handlePlayerTypeChange(playerType, "playerTwo")}>
             </GameConfigPlayerSelect>
         </label>

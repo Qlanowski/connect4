@@ -9,6 +9,7 @@ interface GameConfigSetupProps {
     startGame: (gameConfig: GameConfig) => void;
 }
 
+
 const GameConfigSetupDisconnected: React.FC<GameConfigSetupProps> = ({ startGame }) => {
     const handleSubmit = (newConfig: GameConfig) => { startGame(newConfig) };
     return (

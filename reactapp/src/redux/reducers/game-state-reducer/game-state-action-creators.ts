@@ -10,8 +10,7 @@ export const gameStateMoveMadeActionCreator: ActionCreator<GameStateMoveMadeActi
 };
 
 export const gameStateGameStartedActionCreator: ActionCreator<GameStateGameStartedAction> = (newConfig: GameConfig): GameStateGameStartedAction => {
-    // const nullArr = Array(rows).fill(0).map(row => Array(columns).fill(null));
-    // const initialBoard = nullArr.map(row => row.map(x => ({playerOcupping: Player.None, isWinningMove: false})));
+
     return {
         type: GAME_STATE_ACTION_TYPE.GAME_STARTED,
         newConfig

@@ -3,10 +3,11 @@ import { PlayerType } from '../../../../models/player-type';
 
 interface GameConfigPlayerSelectProps {
     handleChange: (playerType: PlayerType) => void;
+    initialValue: PlayerType;
 };
 
-export const GameConfigPlayerSelect: React.FC<GameConfigPlayerSelectProps> = ({handleChange}) => {
-    const [playerType, setPlayerType] = React.useState<PlayerType>(PlayerType.Human);
+export const GameConfigPlayerSelect: React.FC<GameConfigPlayerSelectProps> = ({handleChange, initialValue}) => {
+    const [playerType, setPlayerType] = React.useState<PlayerType>(initialValue);
     const changePlayerType = (event: React.FormEvent<HTMLSelectElement>): void => {
         const val = event.currentTarget.value;
         setPlayerType(PlayerType[val]);

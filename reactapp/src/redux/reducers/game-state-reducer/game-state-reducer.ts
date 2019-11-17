@@ -19,7 +19,7 @@ export const gameStateReducer: Reducer<GameState, GameStateActions> = (state: Ga
 
 function resolveGameStartedAction (state: GameState, action: GameStateGameStartedAction): GameState  {
     const gameConfig = action.newConfig;
-    const nullArr = Array(gameConfig.boardRows).fill(0).map(row => Array(gameConfig.boardColumns).fill(null));
+    const nullArr = Array(gameConfig.boardColumns).fill(0).map(row => Array(gameConfig.boardRows).fill(null));
     const initialBoard = nullArr.map(row => row.map(x => ({playerOcupping: Player.None, isWinningMove: false})));
     return {
         ...state,
@@ -30,9 +30,17 @@ function resolveGameStartedAction (state: GameState, action: GameStateGameStarte
 }
 
 function resolveMoveMadeAction (state: GameState, action: GameStateMoveMadeAction): GameState {
+    const board = gameBoardSolverService.makeMove(state.board, action.column, state.playerMoving);
+    const checkInfo = gameBoardSolverService.checkBoard(board, action.column, state.gameConfig.toWin);
+    const result = checkInfo.result;
+    if (checkInfo.winningMoves) {
+        checkInfo.winningMoves.forEach(winningMove => board[winningMove.x][winningMove.y] = {...board[winningMove.x][winningMove.y],
+                                                                                            isWinningMove: true});
+    }
     return {
         ...state,
-        board: gameBoardSolverService.makeMove(state.board, action.column, state.playerMoving),
-        playerMoving: state.playerMoving === Player.Player0 ? Player.Player1 : Player.Player0
+        board,
+        playerMoving: state.playerMoving === Player.Player0 ? Player.Player1 : Player.Player0,
+        result
     }
 }
