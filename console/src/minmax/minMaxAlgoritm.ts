@@ -4,13 +4,14 @@ import { MinMaxHeuristic } from "./heuristics/minMaxHeuristic";
 import { BoardHelper } from "./boardHelper";
 
 export class MinMaxAlgorithm {
-    private heuristic: MinMaxHeuristic;
     private timeout: number;
+    private heuristic: MinMaxHeuristic;
     private depthLimit: number;
 
-    constructor(timeout: number, depthLimit: number = Number.POSITIVE_INFINITY) {
-        this.depthLimit = depthLimit;
+    constructor(timeout: number, heuristic: MinMaxHeuristic, depthLimit: number = Number.POSITIVE_INFINITY) {
         this.timeout = timeout;
+        this.heuristic = heuristic;
+        this.depthLimit = depthLimit;
     }
 
     public getScore(board: Board, player: Player): number {
@@ -31,21 +32,13 @@ export class MinMaxAlgorithm {
         beta: number, 
         depth: number, 
         startTime: number): number {
-        if (Date.now() - startTime > this.timeout || depth > this.depthLimit) {
+        if (Date.now() - startTime > this.timeout
+        || depth > this.depthLimit
+        || BoardHelper.isWinner(player, board.getResult())) {
             return this.heuristic.getScore(board, player);
         }
-
-        let allowedMoves = board.allowedMoves();
-        let scoreUpperBound = (board.columns * board.rows + 1 - board.moveCounter) / 2;
-        allowedMoves.forEach(move => {
-            if (BoardHelper.isWinningMove(board, move, player)) {
-                return scoreUpperBound;
-            }
-        });
-
-        beta = Math.min(beta, scoreUpperBound);
-        
-        allowedMoves.forEach(move => {
+    
+        board.allowedMoves().forEach(move => {
             let clonedBoard = board.clone();
             clonedBoard.move(move, player);
             let score = -this.getAlphaBetaScore(
