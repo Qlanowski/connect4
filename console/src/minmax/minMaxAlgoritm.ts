@@ -33,12 +33,18 @@ export class MinMaxAlgorithm {
         depth: number, 
         startTime: number): number {
         if (Date.now() - startTime > this.timeout
-        || depth > this.depthLimit
-        || BoardHelper.isWinner(player, board.getResult())) {
+        || depth > this.depthLimit) {
             return this.heuristic.getScore(board, player);
         }
-    
-        board.allowedMoves().forEach(move => {
+
+        let allowedMoves = board.allowedMoves();
+        allowedMoves.forEach(move => {
+            if (BoardHelper.isWinningMove(board, move, player)) {
+                return this.heuristic.getMaxScore(board);
+            }
+        });
+        
+        allowedMoves.forEach(move => {
             let clonedBoard = board.clone();
             clonedBoard.move(move, player);
             let score = -this.getAlphaBetaScore(
