@@ -60,5 +60,7 @@ export class MinMaxAlgorithm {
                     return beta;
                 }
         });
+
+        return alpha;
     }
 }

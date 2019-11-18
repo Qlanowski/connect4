@@ -6,8 +6,8 @@ import { BoardHelper } from "../boardHelper";
 export class PossibleWinningCountHeuristic implements MinMaxHeuristic {
     public getScore(board: Board, player: Player): number {
         let opponent = BoardHelper.getOpponent(player);
-
-        return this.getPlayerWinPossibilitiesCount(board, player) - this.getPlayerWinPossibilitiesCount(board, opponent);
+        let score = this.getPlayerWinPossibilitiesCount(board, player) - this.getPlayerWinPossibilitiesCount(board, opponent);
+        return score;
     }
     
     public getMaxScore(board: Board): number {
@@ -30,7 +30,7 @@ export class PossibleWinningCountHeuristic implements MinMaxHeuristic {
 
         for(let j = 0; j < board.columns; j++) {
             let height = board.heights[j];
-            if (height === 0 || (fields[height - 1][j] === player && board.rows - height >= board.inRow)) {
+            if (height === 0 || (fields[j][height - 1] === player && board.rows - height >= board.inRow)) {
                 counter++;
             }
         }
@@ -48,7 +48,7 @@ export class PossibleWinningCountHeuristic implements MinMaxHeuristic {
         for(let i = 0; i < board.rows; i++) {
             let possible = 0;
             for(let j = 0; j < board.columns; j++) {
-                if (fields[i][j] !== opponent && (i === 0 || fields[i - 1][j] !== Player.None)) {
+                if (fields[j][i] !== opponent && (i === 0 || fields[j][i - 1] !== Player.None)) {
                     possible++;
                 }
                 else {
@@ -77,7 +77,7 @@ export class PossibleWinningCountHeuristic implements MinMaxHeuristic {
             for(let i = 0; i < iMax; i++) {
                 let x = i;
                 let y = i + j;
-                if (fields[x][y] !== opponent && (x === 0 || fields[x - 1][y] !== Player.None)) {
+                if (fields[y][x] !== opponent && (x === 0 || fields[y][x - 1] !== Player.None)) {
                     possible++;
                 }
                 else {
@@ -106,7 +106,7 @@ export class PossibleWinningCountHeuristic implements MinMaxHeuristic {
             for(let i = 0; i < iMax; i++) {
                 let x = i;
                 let y = j - i;
-                if (fields[x][y] !== opponent && (x === 0 || fields[x - 1][y] !== Player.None)) {
+                if (fields[y][x] !== opponent && (x === 0 || fields[y][x - 1] !== Player.None)) {
                     possible++;
                 }
                 else {
