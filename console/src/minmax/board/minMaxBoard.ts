@@ -1,5 +1,6 @@
 import { Player } from "../../shared/player";
 import { MovesHistoryNode } from "./movesHistoryNode";
+import { Result } from "../../shared/result";
 
 export class MinMaxBoard {
     private _width: number;
@@ -8,6 +9,7 @@ export class MinMaxBoard {
     private _fields: Player[][];
     private _piecesInColumnCount: number[];
     private _movesHistory: MovesHistoryNode[];
+    private _status: Result;
 
     public get width(): number {
         return this._width;
@@ -20,6 +22,10 @@ export class MinMaxBoard {
     public get inRowToWin(): number {
         return this._inRowToWin;
     }
+
+    public get status(): Result {
+        return this._status;
+    }
     
     constructor(width: number, height: number, inRowToWin: number) {
         this._width = width;
@@ -28,6 +34,7 @@ export class MinMaxBoard {
         this._fields = Array(width).map(() => Array(height).fill(Player.None));
         this._piecesInColumnCount = Array(width).fill(0);
         this._movesHistory = [];
+        this._status = Result.GameOn;
     }
 
     public getField(x: number, y: number): Player {
@@ -45,10 +52,11 @@ export class MinMaxBoard {
     }
 
     public makeMove(x: number, player: Player) {
-        if (this.canPlayerMakeMove(player) && this.isMoveValid(x)) {
+        if (this._status === Result.GameOn && this.canPlayerMakeMove(player) && this.isMoveValid(x)) {
             this._movesHistory.push(new MovesHistoryNode(player, x));
             this._fields[x][this._piecesInColumnCount[x]] = player;
             this._piecesInColumnCount[x]++;
+            this.updateStatus();
         }
         else {
             throw new Error(`Player ${player} cannot make move in column ${x}`);
@@ -60,6 +68,7 @@ export class MinMaxBoard {
             let lastMove = this._movesHistory.pop();
             this._piecesInColumnCount[lastMove.x]--;
             this._fields[lastMove.x][this._piecesInColumnCount[lastMove.x]] = Player.None;
+            this._status = Result.GameOn;
         }
         else {
             throw new Error('Cannot undo last move - no moves done yet');
@@ -81,5 +90,22 @@ export class MinMaxBoard {
 
     private isColumnFull(x: number): boolean {
         return this._piecesInColumnCount[x] >= this.height;
+    }
+
+    private setWinner(player: Player) {
+        switch(player) {
+            case Player.Player0:
+                this._status = Result.WonPlayer0;
+                break;
+            case Player.Player1:
+                this._status = Result.WonPlayer1;
+                break;
+            default:
+                throw new Error(`Invalid player given - ${player}`);
+        }
+    }
+
+    private updateStatus() {
+        throw new Error('Not implemented');
     }
 }
