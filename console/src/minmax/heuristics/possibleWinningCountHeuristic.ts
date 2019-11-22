@@ -6,12 +6,12 @@ import { BoardHelper } from "../boardHelper";
 export class PossibleWinningCountHeuristic implements MinMaxHeuristic {
     public getScore(board: Board, player: Player): number {
         let opponent = BoardHelper.getOpponent(player);
-        let score = this.getPlayerWinPossibilitiesCount(board, player) - this.getPlayerWinPossibilitiesCount(board, opponent);
+        let score = this.getPlayerWinPossibilitiesCount(board, player) / 2 - this.getPlayerWinPossibilitiesCount(board, opponent);
         return score;
     }
     
     public getMaxScore(board: Board): number {
-        return Number.POSITIVE_INFINITY;
+        return board.columns * board.columns;
     }
 
     private getPlayerWinPossibilitiesCount(board: Board, player: Player): number {

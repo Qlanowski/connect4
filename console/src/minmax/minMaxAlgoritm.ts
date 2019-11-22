@@ -32,18 +32,15 @@ export class MinMaxAlgorithm {
         beta: number, 
         depth: number, 
         startTime: number): number {
+        if (BoardHelper.isWinner(player, board.getResult())) {
+            return this.heuristic.getMaxScore(board);
+        }
         if (Date.now() - startTime > this.timeout
         || depth > this.depthLimit) {
             return this.heuristic.getScore(board, player);
         }
 
         let allowedMoves = board.allowedMoves();
-        allowedMoves.forEach(move => {
-            if (BoardHelper.isWinningMove(board, move, player)) {
-                return this.heuristic.getMaxScore(board);
-            }
-        });
-        
         allowedMoves.forEach(move => {
             let clonedBoard = board.clone();
             clonedBoard.move(move, player);
@@ -60,7 +57,7 @@ export class MinMaxAlgorithm {
                     return beta;
                 }
         });
-
+        //console.log(alpha);
         return alpha;
     }
 }

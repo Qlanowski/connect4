@@ -30,7 +30,12 @@ export class Board {
     public get inRow(): number {
         return this._inRow;
     }
-
+    public get lastX(): number {
+        return this._lastX
+    }
+    public get lastY(): number {
+        return this._lastY
+    }
 
     constructor(columns: number, rows: number, inRow: number, board: Player[][], heights: number[]) {
         this._columns = columns;
