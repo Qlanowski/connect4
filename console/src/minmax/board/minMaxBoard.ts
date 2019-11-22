@@ -34,6 +34,16 @@ export class MinMaxBoard {
         return this._fields[x][y];
     }
 
+    public getAllAvailableMoves(): number[] {
+        const result: number[] = [];
+        for (let x = 0; x < this._width; x++) {
+            if (!this.isColumnFull(x)) {
+                result.push(x);
+            }
+        }
+        return result;
+    }
+
     public makeMove(x: number, player: Player) {
         if (this.canPlayerMakeMove(player) && this.isMoveValid(x)) {
             this._movesHistory.push(new MovesHistoryNode(player, x));
