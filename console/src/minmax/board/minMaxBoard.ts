@@ -52,14 +52,19 @@ export class MinMaxBoard {
     }
 
     public makeMove(x: number, player: Player) {
-        if (this._status === Result.GameOn && this.canPlayerMakeMove(player) && this.isMoveValid(x)) {
+        if (this._status === Result.GameOn && this.canPlayerMakeMove(player) && this.isMoveValid(x) && !this.isGameFinished()) {
             this._movesHistory.push(new MovesHistoryNode(player, x));
             this._fields[x][this._piecesInColumnCount[x]] = player;
             this._piecesInColumnCount[x]++;
             this.updateStatus();
         }
         else {
-            throw new Error(`Player ${player} cannot make move in column ${x}`);
+            if (this.isGameFinished()) {
+                throw new Error('Game already finished');
+            }
+            else {
+                throw new Error(`Player ${player} cannot make move in column ${x}`);
+            }
         }
     }
 
@@ -78,6 +83,10 @@ export class MinMaxBoard {
     private canPlayerMakeMove(player: Player) {
         const length: number = this._movesHistory.length;
         return length === 0 || this._movesHistory[length - 1].player !== player;
+    }
+
+    private isGameFinished(): boolean {
+        return this._movesHistory.length < this._width * this._height;
     }
 
     private isMoveValid(x: number): boolean {
@@ -221,9 +230,17 @@ export class MinMaxBoard {
     }
 
     private updateStatus() {
+        if (this._status !== Result.GameOn) {
+            return;
+        }
         const winner = this.getWinner();
         if (winner !== Player.None) {
             this.setWinner(winner);
+        }
+        else {
+            if (this.isGameFinished()) {
+                this._status = Result.Draw;
+            }
         }
     }
 }
