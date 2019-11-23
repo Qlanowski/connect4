@@ -1,8 +1,8 @@
-import { MinMaxHeuristic } from "./minMaxHeuristic";
+import { MinMaxEvaluation } from "./minMaxEvaluation";
 import { Board } from "../../shared/board";
 import { Player } from "../../shared/player";
 
-export class ConstMatrixHeuristic implements MinMaxHeuristic {
+export class ConstMatrixEvaluation implements MinMaxEvaluation {
     private readonly scoreMatrix: number[][] = 
     [
         [ 3, 4, 5, 7, 5, 4, 3 ],

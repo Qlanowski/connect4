@@ -1,9 +1,9 @@
-import { MinMaxHeuristic } from "./minMaxHeuristic";
+import { MinMaxEvaluation } from "./minMaxEvaluation";
 import { Board } from "../../shared/board";
 import { Player } from "../../shared/player";
 import { BoardHelper } from "../boardHelper";
 
-export class PossibleWinningCountHeuristic implements MinMaxHeuristic {
+export class PossibleWinningCountEvaluation implements MinMaxEvaluation {
     public getScore(board: Board, player: Player): number {
         let opponent = BoardHelper.getOpponent(player);
         let score = this.getPlayerWinPossibilitiesCount(board, player) / 2 - this.getPlayerWinPossibilitiesCount(board, opponent);

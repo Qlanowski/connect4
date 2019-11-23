@@ -1,14 +1,14 @@
 import { Board } from "../shared/board";
 import { Player } from "../shared/player";
-import { MinMaxHeuristic } from "./heuristics/minMaxHeuristic";
+import { MinMaxEvaluation } from "./evaluation/minMaxEvaluation";
 import { BoardHelper } from "./boardHelper";
 
 export class MinMaxAlgorithm {
     private timeout: number;
-    private heuristic: MinMaxHeuristic;
+    private heuristic: MinMaxEvaluation;
     private depthLimit: number;
 
-    constructor(timeout: number, heuristic: MinMaxHeuristic, depthLimit: number = Number.POSITIVE_INFINITY) {
+    constructor(timeout: number, heuristic: MinMaxEvaluation, depthLimit: number = Number.POSITIVE_INFINITY) {
         this.timeout = timeout;
         this.heuristic = heuristic;
         this.depthLimit = depthLimit;

@@ -2,8 +2,8 @@ import { Bot } from "../shared/bot";
 import { Board } from "../shared/board";
 import { Player } from "../shared/player";
 import { MinMaxAlgorithm } from "./minMaxAlgoritm";
-import { PossibleWinningCountHeuristic } from "./heuristics/possibleWinningCountHeuristic";
-import { ConstMatrixHeuristic } from "./heuristics/constMatrixHeuristic";
+import { PossibleWinningCountEvaluation } from "./evaluation/possibleWinningCountEvaluation";
+import { ConstMatrixEvaluation } from "./evaluation/constMatrixEvaluation";
 
 export class MinMaxBot implements Bot {
     // Bot is Player 0 - no idea why I have to assume that
@@ -16,7 +16,7 @@ export class MinMaxBot implements Bot {
         let boardArr: Player[][] = new Array(columns).fill(0).map(() => Array(rows).fill(Player.None));
         let heights: number[] = new Array(columns).fill(0);
         this.currentBoard = new Board(columns, rows, inRow, boardArr, heights);
-        this.algoritm = new MinMaxAlgorithm(timeout, new ConstMatrixHeuristic(), 5);
+        this.algoritm = new MinMaxAlgorithm(timeout, new ConstMatrixEvaluation(), 5);
     }
 
     playerMove(move: number): void {
