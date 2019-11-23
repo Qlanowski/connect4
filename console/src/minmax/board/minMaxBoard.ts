@@ -230,17 +230,24 @@ export class MinMaxBoard {
     }
 
     private updateStatus() {
-        if (this._status !== Result.GameOn) {
-            return;
-        }
-        const winner = this.getWinner();
-        if (winner !== Player.None) {
-            this.setWinner(winner);
-        }
-        else {
-            if (this.isGameFinished()) {
-                this._status = Result.Draw;
+        if (this.canGameBeFinished()) {
+            const winner = this.getWinner();
+            if (winner !== Player.None) {
+                this.setWinner(winner);
+            }
+            else {
+                if (this.isGameFinished()) {
+                    this._status = Result.Draw;
+                }
             }
         }
+    }
+
+    private canGameBeFinished():boolean {
+        if (this._status !== Result.GameOn) {
+            return false;
+        }
+
+        return this.isGameFinished() || this._movesHistory.length >= this.inRowToWin * 2 - 1;
     }
 }
