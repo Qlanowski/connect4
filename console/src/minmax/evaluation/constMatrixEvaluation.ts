@@ -1,6 +1,6 @@
 import { MinMaxEvaluation } from "./minMaxEvaluation";
-import { Board } from "../../shared/board";
 import { Player } from "../../shared/player";
+import { MinMaxBoard } from "../board/minMaxBoard";
 
 export class ConstMatrixEvaluation implements MinMaxEvaluation {
     private readonly scoreMatrix: number[][] = 
@@ -13,20 +13,26 @@ export class ConstMatrixEvaluation implements MinMaxEvaluation {
         [ 3, 4, 5, 7, 5, 4, 3 ]
     ];
 
-    public getScore(board: Board, player: Player): number {
+    public getScore(board: MinMaxBoard, player: Player): number {
         this.validateBoard(board);
-        //console.log(board.lastX + " " + board.lastY);
-        let score = this.scoreMatrix[board.lastX][board.lastY];
+        let score = 0;
+        for (let x = 0; x < board.width; x++) {
+            for (let y = 0; y < board.height; y++) {
+                if (board.getField(x, y) === player) {
+                    score += this.scoreMatrix[x][y];
+                }
+            }
+        }
         return score;
     }    
     
-    public getMaxScore(board: Board): number {
+    public getMaxScore(board: MinMaxBoard): number {
         this.validateBoard(board);
-        return 1000;
+        return 10000;
     }
 
-    private validateBoard(board: Board) {
-        if(board.rows !== 7 || board.columns !== 6) {
+    private validateBoard(board: MinMaxBoard) {
+        if(board.width !== 6 || board.height !== 7) {
             throw new Error("invalid board size");
         }
     }

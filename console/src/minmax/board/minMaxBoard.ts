@@ -26,12 +26,32 @@ export class MinMaxBoard {
     public get status(): Result {
         return this._status;
     }
+
+    public get winner(): Player {
+        switch(this._status) {
+            case Result.WonPlayer0:
+                return Player.Player0;
+            case Result.WonPlayer1:
+                return Player.Player1;
+            default:
+                return Player.None;
+        }
+    }
+
+    public get lastMove(): number {
+        if (this._movesHistory.length <= 0) {
+            throw new Error('No moves done yet');
+        }
+        else {
+            return this._movesHistory[this._movesHistory.length - 1].x;
+        }
+    }
     
     constructor(width: number, height: number, inRowToWin: number) {
         this._width = width;
         this._height = height;
         this._inRowToWin = inRowToWin;
-        this._fields = Array(width).map(() => Array(height).fill(Player.None));
+        this._fields = Array(width).fill(-1).map(() => Array(height).fill(Player.None));
         this._piecesInColumnCount = Array(width).fill(0);
         this._movesHistory = [];
         this._status = Result.GameOn;
@@ -39,6 +59,15 @@ export class MinMaxBoard {
 
     public getField(x: number, y: number): Player {
         return this._fields[x][y];
+    }
+
+    public getPiecesInColumnCount(x: number): number {
+        if (!this.isValidColumn(x)) {
+            throw new Error(`Invalid column number given - ${x}`);
+        }
+        else {
+            return this._piecesInColumnCount[x];
+        }
     }
 
     public getAllAvailableMoves(): number[] {
@@ -52,7 +81,11 @@ export class MinMaxBoard {
     }
 
     public makeMove(x: number, player: Player) {
-        if (this._status === Result.GameOn && this.canPlayerMakeMove(player) && this.isMoveValid(x) && !this.isGameFinished()) {
+        const isStatusValid: boolean = this._status === Result.GameOn;
+        const canPlayerMakeMove: boolean = this.canPlayerMakeMove(player);
+        const isMoveValid: boolean = this.isMoveValid(x);
+        const isGameFinished: boolean = this.isGameFinished();
+        if (isStatusValid && canPlayerMakeMove && isMoveValid && !isGameFinished) {
             this._movesHistory.push(new MovesHistoryNode(player, x));
             this._fields[x][this._piecesInColumnCount[x]] = player;
             this._piecesInColumnCount[x]++;
@@ -86,7 +119,7 @@ export class MinMaxBoard {
     }
 
     private isGameFinished(): boolean {
-        return this._movesHistory.length < this._width * this._height;
+        return this._movesHistory.length >= this._width * this._height;
     }
 
     private isMoveValid(x: number): boolean {
@@ -139,7 +172,7 @@ export class MinMaxBoard {
     }
 
     private getHorizontalWinner(): Player {
-        for (let y = 0; y <= this._height; y++) {
+        for (let y = 0; y < this._height; y++) {
             let inRow = 0;
             let potentialWinner = this._fields[0][y];
             for (let x = 0; x < this._width; x++) {

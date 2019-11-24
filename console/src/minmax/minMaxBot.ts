@@ -1,42 +1,44 @@
 import { Bot } from "../shared/bot";
-import { Board } from "../shared/board";
 import { Player } from "../shared/player";
 import { MinMaxAlgorithm } from "./minMaxAlgoritm";
-import { PossibleWinningCountEvaluation } from "./evaluation/possibleWinningCountEvaluation";
 import { ConstMatrixEvaluation } from "./evaluation/constMatrixEvaluation";
+import { MinMaxBoard } from "./board/minMaxBoard";
+import { BoardHelper } from "./boardHelper";
 
 export class MinMaxBot implements Bot {
     // Bot is Player 0 - no idea why I have to assume that
     private readonly myPlayer: Player = Player.Player0;
     private readonly opponentPlayer: Player = Player.Player1;
-    private currentBoard: Board;
+    private board: MinMaxBoard;
     private algoritm: MinMaxAlgorithm;
 
     constructor(columns: number, rows: number, inRow: number, timeout: number) {
-        let boardArr: Player[][] = new Array(columns).fill(0).map(() => Array(rows).fill(Player.None));
-        let heights: number[] = new Array(columns).fill(0);
-        this.currentBoard = new Board(columns, rows, inRow, boardArr, heights);
-        this.algoritm = new MinMaxAlgorithm(timeout, new ConstMatrixEvaluation(), 5);
+        this.board = new MinMaxBoard(columns, rows, inRow);
+        this.algoritm = new MinMaxAlgorithm(timeout, new ConstMatrixEvaluation(), 7);
     }
 
     playerMove(move: number): void {
-        this.currentBoard.move(move, this.opponentPlayer);
+        this.board.makeMove(move, this.opponentPlayer);
     }
 
     makeMove(): number {
-        let bestScore = Number.NEGATIVE_INFINITY;
-        let allowedMoves = this.currentBoard.allowedMoves();
-        let bestMove = allowedMoves[0];
+        let bestScore = Number.POSITIVE_INFINITY;
+        let bestMove = -1;
+        let allowedMoves = this.board.getAllAvailableMoves();
+        if (allowedMoves.length === 0) {
+            throw new Error('No moves available');
+        }
         allowedMoves.forEach(move => {
-            let board = this.currentBoard.clone();
-            board.move(move, this.myPlayer);
-            let score = this.algoritm.getScore(board, this.myPlayer);
+            this.board.makeMove(move, this.myPlayer);
+            let score = this.algoritm.getScore(this.board, this.opponentPlayer);
+            this.board.undoLastMove();
             console.log(score);
-            if(bestScore < score) {
+            if(bestScore > score) {
                 bestScore = score;
                 bestMove = move;
             }
         });
+        this.board.makeMove(bestMove, this.myPlayer);
         return bestMove;
     }
 }
