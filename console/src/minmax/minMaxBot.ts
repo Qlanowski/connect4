@@ -24,22 +24,31 @@ export class MinMaxBot implements Bot {
 
     makeMove(): number {
         let bestScore = Number.POSITIVE_INFINITY;
-        let bestMove = -1;
         let allowedMoves = this.board.getAllAvailableMoves();
         if (allowedMoves.length === 0) {
             throw new Error('No moves available');
         }
-        allowedMoves.forEach(move => {
+        let bestMove = allowedMoves[0];
+        for (const move of allowedMoves) {
             this.board.makeMove(move, this.myPlayer);
+
+            if (this.board.winner === this.myPlayer) {
+                this.board.undoLastMove();
+                return move;
+            }
+
             let score = this.algoritm.getScore(this.board, this.opponentPlayer);
             this.board.undoLastMove();
+
             console.log(`move: ${move}, score: ${score}`);
             if(bestScore > score) {
                 bestScore = score;
                 bestMove = move;
             }
-        });
+        }
+
         this.board.makeMove(bestMove, this.myPlayer);
+        
         return bestMove;
     }
 }
