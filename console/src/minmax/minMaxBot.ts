@@ -14,7 +14,8 @@ export class MinMaxBot implements Bot {
 
     constructor(columns: number, rows: number, inRow: number, timeout: number) {
         this.board = new MinMaxBoard(columns, rows, inRow);
-        this.algoritm = new MinMaxAlgorithm(timeout, new ConstMatrixEvaluation(), 7);
+        const depthLimit = 6;
+        this.algoritm = new MinMaxAlgorithm(timeout, new ConstMatrixEvaluation(), depthLimit);
     }
 
     playerMove(move: number): void {
@@ -32,7 +33,7 @@ export class MinMaxBot implements Bot {
             this.board.makeMove(move, this.myPlayer);
             let score = this.algoritm.getScore(this.board, this.opponentPlayer);
             this.board.undoLastMove();
-            console.log(score);
+            console.log(`move: ${move}, score: ${score}`);
             if(bestScore > score) {
                 bestScore = score;
                 bestMove = move;

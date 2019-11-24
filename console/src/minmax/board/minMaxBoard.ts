@@ -92,7 +92,7 @@ export class MinMaxBoard {
             this.updateStatus();
         }
         else {
-            if (this.isGameFinished()) {
+            if (isGameFinished || !isStatusValid) {
                 throw new Error('Game already finished');
             }
             else {

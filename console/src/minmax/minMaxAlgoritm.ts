@@ -2,13 +2,14 @@ import { Player } from "../shared/player";
 import { MinMaxEvaluation } from "./evaluation/minMaxEvaluation";
 import { BoardHelper } from "./boardHelper";
 import { MinMaxBoard } from "./board/minMaxBoard";
+import { MinMaxBot } from "./minMaxBot";
 
 export class MinMaxAlgorithm {
-    private timeout: number;
-    private evaluation: MinMaxEvaluation;
-    private depthLimit: number;
+    private readonly timeout: number;
+    private readonly evaluation: MinMaxEvaluation;
+    private readonly depthLimit: number;
 
-    constructor(timeout: number, evaluation: MinMaxEvaluation, depthLimit: number = Number.POSITIVE_INFINITY) {
+    constructor(timeout: number, evaluation: MinMaxEvaluation, depthLimit: number) {
         this.timeout = timeout;
         this.evaluation = evaluation;
         this.depthLimit = depthLimit;
@@ -38,21 +39,18 @@ export class MinMaxAlgorithm {
             return this.evaluation.getScore(board, player);
         }
 
-        let allowedMoves = board.getAllAvailableMoves();
-        allowedMoves.forEach(move => {
-            board.makeMove(move, player);
+        if (this.canPlayerWin(board, player)) {
+            return this.evaluation.getMaxScore(board);
+        }
 
-            if (board.winner === player) {
-                let score = this.evaluation.getMaxScore(board);
-                board.undoLastMove();
-                return score;
-            }
+        for (const move of board.getAllAvailableMoves()) {
+            board.makeMove(move, player);
 
             let score = -this.getAlphaBetaScore(
                 board, 
                 BoardHelper.getOpponent(player), 
-                -beta,
-                -alpha, 
+                Number.NEGATIVE_INFINITY,
+                Number.POSITIVE_INFINITY, 
                 depth + 1, 
                 startTime);
 
@@ -62,7 +60,23 @@ export class MinMaxAlgorithm {
             if (alpha >= beta) {
                 return beta;
             }
-        });
+        }
+
         return alpha;
+    }
+
+    private canPlayerWin(board: MinMaxBoard, player: Player): boolean {
+        for (const move of board.getAllAvailableMoves()) {
+            board.makeMove(move, player);
+
+            if (board.winner === player) {
+                board.undoLastMove();
+                return true;
+            }
+
+            board.undoLastMove();
+        }
+
+        return false;
     }
 }
