@@ -49,7 +49,7 @@ export function readNumber(text: string, allowedvalues: number[]): number {
         }
     }
 }
-function pickBot(id: number, game: Game, columns: number, rows: number, inRowForWin: number, timeout: number): Bot {
+export function pickBot(id: number, game: Game, columns: number, rows: number, inRowForWin: number, timeout: number): Bot {
     let bot: Bot;
     switch (id) {
         case 0:
@@ -59,9 +59,9 @@ function pickBot(id: number, game: Game, columns: number, rows: number, inRowFor
             bot = new PnsBot(columns, rows, inRowForWin, timeout);
             break;
         case 2:
-            bot = new HumanBot(game.board);
+            bot = new McstBot(columns, rows, inRowForWin, timeout);
             break;
-        default:
+        case 3:
             bot = new HumanBot(game.board);
             break;
     }

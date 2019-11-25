@@ -65,10 +65,10 @@ export class McstBot implements Bot {
 
         let foo = (x: Node) => x.wins / x.visits;
         let bestNode = this.node.childNodes.reduce((prev, current) => (foo(prev) > foo(current)) ? prev : current);
-        console.log("### percentages ####");
-        for (let child of this.node.childNodes) {
-            console.log(child.move, child.wins, child.visits, child.wins / child.visits);
-        }
+        // console.log("### percentages ####");
+        // for (let child of this.node.childNodes) {
+        //     console.log(child.move, child.wins, child.visits, child.wins / child.visits);
+        // }
         this.node = bestNode;
         bestNode.parent = null;
         this.currentBoard.move(bestNode.move, Player.Player0);

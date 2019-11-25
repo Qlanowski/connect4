@@ -13,6 +13,9 @@ export class Game {
     public gameOn(): boolean {
         return this.board.getResult() == Result.GameOn;
     }
+    public result(): Result {
+        return this.board.getResult();
+    }
 
     public allowedMoves(): number[] {
         return this.board.allowedMoves();

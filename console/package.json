@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/app.js"
+    "start": "tsc && node dist/app.js",
+    "matches": "tsc && node dist/matches.js"
   },
   "author": "",
   "license": "ISC",
