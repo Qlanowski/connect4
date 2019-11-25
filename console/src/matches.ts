@@ -88,7 +88,7 @@ function playMatch(match: Match) {
 
 function run() {
     const resultPath: string = "results.csv";
-    const gamesForsettings: number = 1;
+    const gamesForSettings: number = 1;
     const timeouts = [100, 200, 300];
     const boards: BoardSize[] = [
         {
@@ -134,7 +134,7 @@ function run() {
         },
     ]
     let matches: Match[] = [];
-    let matchesCount = boards.length * timeouts.length * botPairs.length * gamesForsettings;
+    let matchesCount = boards.length * timeouts.length * botPairs.length * gamesForSettings;
     let counter = 0;
     for (let boardsize of boards) {
         for (let timeout of timeouts) {
@@ -151,7 +151,7 @@ function run() {
                     draw: 0,
                 }
                 matches.push(match);
-                for (let i = 0; i < gamesForsettings; i++) {
+                for (let i = 0; i < gamesForSettings; i++) {
                     counter++;
                     console.log(`${counter}/${matchesCount} - Match started: `);
                     console.log(match);
@@ -160,8 +160,6 @@ function run() {
             }
         }
     }
-    console.log(matches);
     saveMatchesToFile(matches, resultPath);
-
 }
 run();
