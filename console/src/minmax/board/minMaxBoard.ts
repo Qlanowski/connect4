@@ -46,6 +46,10 @@ export class MinMaxBoard {
             return this._movesHistory[this._movesHistory.length - 1].x;
         }
     }
+
+    public get movesDoneCount(): number {
+        return this._movesHistory.length;
+    }
     
     constructor(width: number, height: number, inRowToWin: number) {
         this._width = width;

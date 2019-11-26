@@ -40,7 +40,8 @@ export class MinMaxAlgorithm {
         }
 
         if (this.canPlayerWin(board, player)) {
-            return this.evaluation.getMaxScore(board);
+            const maxNumberOfMovesLeft = board.width * board.height + 1 - board.movesDoneCount;
+            return this.evaluation.getMaxScore(board) * maxNumberOfMovesLeft;
         }
 
         for (const move of board.getAllAvailableMoves()) {
@@ -49,8 +50,8 @@ export class MinMaxAlgorithm {
             let score = -this.getAlphaBetaScore(
                 board, 
                 BoardHelper.getOpponent(player), 
-                Number.NEGATIVE_INFINITY,
-                Number.POSITIVE_INFINITY, 
+                -beta,
+                -alpha, 
                 depth + 1, 
                 startTime);
 
