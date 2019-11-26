@@ -1,8 +1,6 @@
 import { Player } from "../shared/player";
 import { MinMaxEvaluation } from "./evaluation/minMaxEvaluation";
-import { BoardHelper } from "./boardHelper";
 import { MinMaxBoard } from "./board/minMaxBoard";
-import { MinMaxBot } from "./minMaxBot";
 
 export class MinMaxAlgorithm {
     private readonly timeout: number;
@@ -49,7 +47,7 @@ export class MinMaxAlgorithm {
 
             let score = -this.getAlphaBetaScore(
                 board, 
-                BoardHelper.getOpponent(player), 
+                this.getOpponent(player), 
                 -beta,
                 -alpha, 
                 depth + 1, 
@@ -79,5 +77,16 @@ export class MinMaxAlgorithm {
         }
 
         return false;
+    }
+
+    private getOpponent(player: Player): Player {
+        switch(player) {
+            case Player.Player0:
+                return Player.Player1;
+            case Player.Player1:
+                return Player.Player0;
+            default:
+                return Player.None;
+        }
     }
 }
