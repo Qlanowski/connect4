@@ -1,3 +1,3 @@
 export enum PlayerType {
-    Ai = "Ai", Human = "Human"
+    Mcst = "Mcst", Human = "Human", Pns = "Pns"
 }
