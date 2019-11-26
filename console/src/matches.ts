@@ -49,11 +49,10 @@ function saveMatchesToFile(matches: Match[], filename: string) {
         });
 }
 
-function playMatch(match: Match) {
+function playMatch(match: Match, turn: number) {
     let game: Game = new Game(match.columns, match.rows, match.forWin);
     let bot0: Bot = pickBot(match.bot0Id, game, match.columns, match.rows, match.forWin, match.timeout);
     let bot1: Bot = pickBot(match.bot1Id, game, match.columns, match.rows, match.forWin, match.timeout);
-    let turn = 0;
     while (game.gameOn()) {
         if (turn === 0) {
             let move = bot0.makeMove();
@@ -87,9 +86,16 @@ function playMatch(match: Match) {
 }
 
 function run() {
-    const resultPath: string = "results.csv";
-    const gamesForSettings: number = 1;
-    const timeouts = [100, 200, 300];
+    const boardsPath: string = "boards.csv";
+    const timeoutsPath: string = "timeouts.csv";
+    const gamesForSettings: number = 2;
+    const timeouts = [10, 11, 12];
+    const avgTimeout: number = 10;
+    const avgBoard: BoardSize = {
+        rows: 6,
+        columns: 7,
+        forWin: 4
+    }
     const boards: BoardSize[] = [
         {
             rows: 6,
@@ -113,53 +119,69 @@ function run() {
             bot1Id: 1
         },
         {
-            bot0Id: 1,
-            bot1Id: 0
-        },
-        {
             bot0Id: 0,
             bot1Id: 2
         },
         {
-            bot0Id: 2,
-            bot1Id: 0
-        },
-        {
             bot0Id: 1,
             bot1Id: 2
-        },
-        {
-            bot0Id: 2,
-            bot1Id: 1
-        },
+        }
     ]
-    let matches: Match[] = [];
-    let matchesCount = boards.length * timeouts.length * botPairs.length * gamesForSettings;
+    let boardMatches: Match[] = [];
+    let matchesCount = boards.length * botPairs.length * gamesForSettings + timeouts.length * botPairs.length * gamesForSettings;
     let counter = 0;
-    for (let boardsize of boards) {
-        for (let timeout of timeouts) {
-            for (let pair of botPairs) {
-                let match: Match = {
-                    columns: boardsize.columns,
-                    rows: boardsize.rows,
-                    forWin: boardsize.forWin,
-                    bot0Id: pair.bot0Id,
-                    bot1Id: pair.bot1Id,
-                    timeout: timeout,
-                    bot0win: 0,
-                    bot1win: 0,
-                    draw: 0,
-                }
-                matches.push(match);
-                for (let i = 0; i < gamesForSettings; i++) {
-                    counter++;
-                    console.log(`${counter}/${matchesCount} - Match started: `);
-                    console.log(match);
-                    playMatch(match);
-                }
+
+    console.log("##### BOARDS ########");
+    for (let pair of botPairs) {
+        for (let boardsize of boards) {
+            let match: Match = {
+                columns: boardsize.columns,
+                rows: boardsize.rows,
+                forWin: boardsize.forWin,
+                bot0Id: pair.bot0Id,
+                bot1Id: pair.bot1Id,
+                timeout: avgTimeout,
+                bot0win: 0,
+                bot1win: 0,
+                draw: 0,
+            }
+            boardMatches.push(match);
+            for (let i = 0; i < gamesForSettings; i++) {
+                counter++;
+                console.log(`${counter}/${matchesCount} - Match started: `);
+                console.log(match);
+                playMatch(match, i % 2);
             }
         }
     }
-    saveMatchesToFile(matches, resultPath);
+    saveMatchesToFile(boardMatches, boardsPath);
+
+
+    console.log("##### TIMEOUT ########");
+    let timeoutMatches: Match[] = [];
+    let boardsize = avgBoard;
+    for (let pair of botPairs) {
+        for (let timeout of timeouts) {
+            let match: Match = {
+                columns: boardsize.columns,
+                rows: boardsize.rows,
+                forWin: boardsize.forWin,
+                bot0Id: pair.bot0Id,
+                bot1Id: pair.bot1Id,
+                timeout: timeout,
+                bot0win: 0,
+                bot1win: 0,
+                draw: 0,
+            }
+            timeoutMatches.push(match);
+            for (let i = 0; i < gamesForSettings; i++) {
+                counter++;
+                console.log(`${counter}/${matchesCount} - Match started: `);
+                console.log(match);
+                playMatch(match, i % 2);
+            }
+        }
+    }
+    saveMatchesToFile(timeoutMatches, timeoutsPath);
 }
 run();
