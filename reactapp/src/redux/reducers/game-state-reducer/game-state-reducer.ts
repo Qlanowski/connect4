@@ -39,6 +39,7 @@ function resolveGameRestartedAction(state: GameState, action: GameStateGameResta
     return {
         ...state,
         board,
+        playerMoving: Player.Player0,
         result: Result.GameOn
     }
 }

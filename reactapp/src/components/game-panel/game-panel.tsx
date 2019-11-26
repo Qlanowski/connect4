@@ -14,7 +14,7 @@ import {
 import { GamePanelSidebar } from './game-panel-sidebar/game-panel-sidebar';
 import { GameConfig } from '../../models/game-config';
 import { Bot } from '../../../../console/src/shared/bot';
-import { BotFactory } from '../../services/bot-factory';
+import { BotInstanceProvider } from '../../services/bot-instance-provider';
 
 const GamePanelContainer = styled.div
     `
@@ -36,28 +36,35 @@ interface GamePanelProps {
     gameConfig: GameConfig;
 }
 
-const botFactory = new BotFactory();
+const botInstanceProvider = new BotInstanceProvider();
 
 const GamePanelDisconnected: React.FC<GamePanelProps> = ({ board, playerMoving, makeMove, result, restartGame, newGame, gameConfig }) => {
-    const player1Bot: Bot = botFactory.getBot(gameConfig.playerOne, gameConfig);
-    const player2Bot: Bot = botFactory.getBot(gameConfig.playerTwo, gameConfig);
     const [isBotMakingMove, setIsBotMakingMove] = React.useState<boolean>(false);
 
 
     React.useEffect(() => {
-        const botMoving = playerMoving === Player.Player0 ? player1Bot : player2Bot;
-        const botWaiting = playerMoving === Player.Player0 ? player2Bot : player1Bot;
+        if (result === Result.GameOn)
+            botInstanceProvider.initializeBots(gameConfig);
+    }, [result]);
+
+    React.useEffect(() => {
+        const botMoving = playerMoving === Player.Player0 ? botInstanceProvider.getPlayer1Bot() : botInstanceProvider.getPlayer2Bot();
+        const botWaiting = playerMoving === Player.Player0 ? botInstanceProvider.getPlayer2Bot() : botInstanceProvider.getPlayer1Bot();
         setIsBotMakingMove(true);
-        setTimeout(function() {
-            handleBotMoving(player1Bot, player2Bot);
+        setTimeout(function () {
+            handleBotMoving(botMoving, botWaiting);
             setIsBotMakingMove(false);
         })
     }, [playerMoving])
 
     const handleColumnClick = (column: number): void => {
-        if (result === Result.GameOn && !isBotMakingMove) {
-            makeMove(column);
-        }
+        if (result !== Result.GameOn || isBotMakingMove)
+            return;
+            
+        const botWaiting = playerMoving === Player.Player0 ? botInstanceProvider.getPlayer2Bot() : botInstanceProvider.getPlayer1Bot();
+        if (botWaiting !== null)
+            botWaiting.playerMove(column);
+        makeMove(column);
     }
     return (
         <GamePanelContainer>
