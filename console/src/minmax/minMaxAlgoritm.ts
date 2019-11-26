@@ -38,7 +38,7 @@ export class MinMaxAlgorithm {
         }
 
         if (this.canPlayerWin(board, player)) {
-            const maxNumberOfMovesLeft = board.width * board.height + 1 - board.movesDoneCount;
+            const maxNumberOfMovesLeft = (board.width * board.height + 1 - board.movesDoneCount) / 2;
             return this.evaluation.getMaxScore(board) * maxNumberOfMovesLeft;
         }
 
