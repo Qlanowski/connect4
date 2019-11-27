@@ -14,7 +14,8 @@ import {
 import { GamePanelSidebar } from './game-panel-sidebar/game-panel-sidebar';
 import { GameConfig } from '../../models/game-config';
 import { Bot } from '../../../../console/src/shared/bot';
-import { BotInstanceProvider } from '../../services/bot-instance-provider';
+import { BotWorkerService } from '../../services/bot/bot-worker-service';
+
 
 const GamePanelContainer = styled.div
     `
@@ -36,34 +37,34 @@ interface GamePanelProps {
     gameConfig: GameConfig;
 }
 
-const botInstanceProvider = new BotInstanceProvider();
+const botWorkerService = new BotWorkerService();
 
 const GamePanelDisconnected: React.FC<GamePanelProps> = ({ board, playerMoving, makeMove, result, restartGame, newGame, gameConfig }) => {
     const [isBotMakingMove, setIsBotMakingMove] = React.useState<boolean>(false);
 
 
     React.useEffect(() => {
+        botWorkerService.subscribeToBotMove((column) => {
+            setIsBotMakingMove(false);
+            if (column !== null)
+                makeMove(column);
+        });
+    }, []);
+
+    React.useEffect(() => {
         if (result === Result.GameOn)
-            botInstanceProvider.initializeBots(gameConfig);
+            botWorkerService.initializeBots(gameConfig);
     }, [result]);
 
     React.useEffect(() => {
-        const botMoving = playerMoving === Player.Player0 ? botInstanceProvider.getPlayer1Bot() : botInstanceProvider.getPlayer2Bot();
-        const botWaiting = playerMoving === Player.Player0 ? botInstanceProvider.getPlayer2Bot() : botInstanceProvider.getPlayer1Bot();
         setIsBotMakingMove(true);
-        setTimeout(function () {
-            handleBotMoving(botMoving, botWaiting);
-            setIsBotMakingMove(false);
-        })
+        botWorkerService.makeMove(playerMoving);
     }, [playerMoving])
 
     const handleColumnClick = (column: number): void => {
         if (result !== Result.GameOn || isBotMakingMove)
             return;
-            
-        const botWaiting = playerMoving === Player.Player0 ? botInstanceProvider.getPlayer2Bot() : botInstanceProvider.getPlayer1Bot();
-        if (botWaiting !== null)
-            botWaiting.playerMove(column);
+        botWorkerService.moveMade(playerMoving, column);
         makeMove(column);
     }
     return (
@@ -74,18 +75,6 @@ const GamePanelDisconnected: React.FC<GamePanelProps> = ({ board, playerMoving, 
             ></GamePanelSidebar>
         </GamePanelContainer>
     );
-
-    function handleBotMoving(botMoving: Bot, botWaiting: Bot) {
-        if (botMoving === null || result !== Result.GameOn) {
-            return;
-        }
-        const moveToMake = botMoving.makeMove();
-        console.log(moveToMake);
-        makeMove(moveToMake);
-        if (botWaiting !== null) {
-            botWaiting.playerMove(moveToMake);
-        }
-    }
 }
 
 const mapStateToProps = (store: GameState) => {

@@ -1,8 +1,8 @@
-import { PlayerType } from '../models/player-type';
-import { Bot } from '../../../console/src/shared/bot';
-import { PnsBot } from '../../../console/src/pns/pns';
-import { McstBot } from '../../../console/src/mcst/mcst';
-import { GameConfig } from '../models/game-config';
+import { PlayerType } from '../../models/player-type';
+import { Bot } from '../../../../console/src/shared/bot';
+import { PnsBot } from '../../../../console/src/pns/pns';
+import { McstBot } from '../../../../console/src/mcst/mcst';
+import { GameConfig } from '../../models/game-config';
 
 
 export class BotFactory {

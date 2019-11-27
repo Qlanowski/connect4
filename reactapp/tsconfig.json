@@ -14,6 +14,7 @@
         "jsx": "react",
         "allowJs": true,
         "baseUrl": "./",
+        "esModuleInterop": true,
         "paths": {
             "components/*": [
                 "src/components/*"
