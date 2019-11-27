@@ -14,14 +14,15 @@ export class MinMaxAlgorithm {
     }
 
     public getScore(board: MinMaxBoard, player: Player): number {
-        let startTime: number = Date.now();
+        let startTime: number = new Date().getTime();
         return this.getAlphaBetaScore(
             board, 
             player, 
             Number.NEGATIVE_INFINITY, 
             Number.POSITIVE_INFINITY, 
             0, 
-            startTime);
+            startTime,
+            this.timeout);
     }
 
     private getAlphaBetaScore(
@@ -30,9 +31,10 @@ export class MinMaxAlgorithm {
         alpha: number, 
         beta: number, 
         depth: number, 
-        startTime: number): number {
+        startTime: number, 
+        timeout: number): number {
 
-        if (Date.now() - startTime > this.timeout
+        if (new Date().getTime() - startTime > this.timeout
         || depth > this.depthLimit) {
             return this.evaluation.getScore(board, player);
         }
@@ -42,7 +44,9 @@ export class MinMaxAlgorithm {
             return this.evaluation.getMaxScore(board) * maxNumberOfMovesLeft;
         }
 
-        for (const move of board.getAllAvailableMoves()) {
+        const avaliableMoves = board.getAllAvailableMoves();
+
+        for (const move of avaliableMoves) {
             board.makeMove(move, player);
 
             let score = -this.getAlphaBetaScore(
@@ -51,7 +55,8 @@ export class MinMaxAlgorithm {
                 -beta,
                 -alpha, 
                 depth + 1, 
-                startTime);
+                startTime,
+                timeout / avaliableMoves.length);
 
             board.undoLastMove();
 

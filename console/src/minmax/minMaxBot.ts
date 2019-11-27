@@ -3,6 +3,7 @@ import { Player } from "../shared/player";
 import { MinMaxAlgorithm } from "./minMaxAlgoritm";
 import { ConstMatrixEvaluation } from "./evaluation/constMatrixEvaluation";
 import { MinMaxBoard } from "./board/minMaxBoard";
+import { InRowCountEvaluation } from "./evaluation/inRowCountEvaluation";
 
 export class MinMaxBot implements Bot {
     // Bot is Player 0 - no idea why I have to assume that
@@ -14,7 +15,7 @@ export class MinMaxBot implements Bot {
     constructor(columns: number, rows: number, inRow: number, timeout: number) {
         this.board = new MinMaxBoard(columns, rows, inRow);
         const depthLimit = 10;
-        this.algoritm = new MinMaxAlgorithm(timeout, new ConstMatrixEvaluation(), depthLimit);
+        this.algoritm = new MinMaxAlgorithm(timeout, new InRowCountEvaluation(), depthLimit);
     }
 
     playerMove(move: number): void {
