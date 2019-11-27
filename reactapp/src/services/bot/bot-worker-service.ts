@@ -20,8 +20,10 @@ export class BotWorkerService {
     }
 
     subscribeToBotMove(callback) {
-        botWorker.addEventListener('message', (event) => {
-            callback(event.data);
-        });
+        botWorker.addEventListener('message', callback);
+    }
+
+    unsubscribeFromBotMove(callback) {
+        botWorker.removeEventListener('message', callback);
     }
 }

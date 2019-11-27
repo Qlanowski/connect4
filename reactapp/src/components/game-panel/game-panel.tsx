@@ -44,11 +44,15 @@ const GamePanelDisconnected: React.FC<GamePanelProps> = ({ board, playerMoving, 
 
 
     React.useEffect(() => {
-        botWorkerService.subscribeToBotMove((column) => {
+        const callback = (event) => {
             setIsBotMakingMove(false);
-            if (column !== null)
-                makeMove(column);
-        });
+            if (event.data !== null)
+                makeMove(event.data);
+        };
+        
+        botWorkerService.subscribeToBotMove(callback);
+
+        return () => botWorkerService.unsubscribeFromBotMove(callback);
     }, []);
 
     React.useEffect(() => {
@@ -57,8 +61,10 @@ const GamePanelDisconnected: React.FC<GamePanelProps> = ({ board, playerMoving, 
     }, [result]);
 
     React.useEffect(() => {
-        setIsBotMakingMove(true);
-        botWorkerService.makeMove(playerMoving);
+        if (result === Result.GameOn) {
+            setIsBotMakingMove(true);
+            botWorkerService.makeMove(playerMoving);
+        }
     }, [playerMoving])
 
     const handleColumnClick = (column: number): void => {

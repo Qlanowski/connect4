@@ -50,6 +50,8 @@ function resolveNewGameAction(state: GameState, action: GameStateNewGameAction):
 
 function resolveMoveMadeAction (state: GameState, action: GameStateMoveMadeAction): GameState {
     const board = gameBoardSolverService.makeMove(state.board, action.column, state.playerMoving);
+    if (board === null)
+        return {...state};
     const checkInfo = gameBoardSolverService.checkBoard(board, action.column, state.gameConfig.toWin);
     const result = checkInfo.result;
     if (checkInfo.winningMoves) {
