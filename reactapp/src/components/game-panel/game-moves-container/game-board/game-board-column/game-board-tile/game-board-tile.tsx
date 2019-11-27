@@ -1,5 +1,5 @@
-import { Tile } from "../../../../../models/tile";
-import { Player } from "../../../../../models/imported";
+import { Tile } from "../../../../../../models/tile";
+import { Player } from "../../../../../../models/imported";
 import * as React from 'react';
 import styled from 'styled-components';
 const cross = require('./cross.png');

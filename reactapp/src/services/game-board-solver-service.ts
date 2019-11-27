@@ -15,10 +15,13 @@ interface TilePoint {
 }
 
 export class GameBoardSolverService {
+    canMove(board: Tile[][], column: number): boolean {
+        const editedTileIndex = board[column].findIndex(tile => tile.playerOcupping === Player.None);
+        return editedTileIndex !== -1;
+    }
+
     makeMove(board: Tile[][], column: number, playerMoving: Player): Tile[][] {
         const editedTileIndex = board[column].findIndex(tile => tile.playerOcupping === Player.None);
-        if (editedTileIndex === -1)
-            return null;
         const newTiles = board[column].slice();
         newTiles[editedTileIndex] = { ...newTiles[editedTileIndex], playerOcupping: playerMoving };
         const newBoard = board.map(boardColumn => boardColumn === board[column] ? newTiles : boardColumn);

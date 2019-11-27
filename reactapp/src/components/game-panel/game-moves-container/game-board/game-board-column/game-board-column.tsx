@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { GameBoardTile } from './game-board-tile/game-board-tile';
-import { Tile } from '../../../../models/tile';
+import { Tile } from '../../../../../models/tile';
 
 const GameBoardColumnContainer = styled.div`
     flex: 1;

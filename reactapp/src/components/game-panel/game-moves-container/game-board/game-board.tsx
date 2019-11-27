@@ -1,9 +1,7 @@
-import { connect} from 'react-redux';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Player, Result } from '../../../models/imported';
-import { Tile } from '../../../models/tile';
+import { Tile } from '../../../../models/tile';
 import { GameBoardColumn } from './game-board-column/game-board-column';
 
 const GameBoardContainer = styled.div
