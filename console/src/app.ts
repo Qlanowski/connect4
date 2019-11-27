@@ -67,7 +67,10 @@ export function pickBot(id: number, game: Game, columns: number, rows: number, i
         case 3:
             bot = new MinMaxBot(columns, rows, inRowForWin, timeout, new ConstMatrixEvaluation())
             break;
-        case 3:
+        case 4:
+            bot = new HumanBot(game.board);
+            break;
+        default:
             bot = new HumanBot(game.board);
             break;
     }
