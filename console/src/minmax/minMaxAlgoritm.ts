@@ -34,7 +34,7 @@ export class MinMaxAlgorithm {
         startTime: number, 
         timeout: number): number {
 
-        if (new Date().getTime() - startTime > this.timeout
+        if (new Date().getTime() - startTime > timeout
         || depth > this.depthLimit) {
             return this.evaluation.getScore(board, player);
         }
@@ -46,6 +46,9 @@ export class MinMaxAlgorithm {
 
         const avaliableMoves = board.getAllAvailableMoves();
 
+        const timeoutLeft = timeout - (new Date().getTime() - startTime);
+        startTime = new Date().getTime();
+
         for (const move of avaliableMoves) {
             board.makeMove(move, player);
 
@@ -56,7 +59,7 @@ export class MinMaxAlgorithm {
                 -alpha, 
                 depth + 1, 
                 startTime,
-                timeout / avaliableMoves.length);
+                timeoutLeft / avaliableMoves.length);
 
             board.undoLastMove();
 
