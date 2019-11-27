@@ -1,9 +1,8 @@
 import { Bot } from "../shared/bot";
 import { Player } from "../shared/player";
 import { MinMaxAlgorithm } from "./minMaxAlgoritm";
-import { ConstMatrixEvaluation } from "./evaluation/constMatrixEvaluation";
 import { MinMaxBoard } from "./board/minMaxBoard";
-import { InRowCountEvaluation } from "./evaluation/inRowCountEvaluation";
+import { MinMaxEvaluation } from "./evaluation/minMaxEvaluation";
 
 export class MinMaxBot implements Bot {
     // Bot is Player 0 - no idea why I have to assume that
@@ -12,10 +11,10 @@ export class MinMaxBot implements Bot {
     private board: MinMaxBoard;
     private algoritm: MinMaxAlgorithm;
 
-    constructor(columns: number, rows: number, inRow: number, timeout: number) {
+    constructor(columns: number, rows: number, inRow: number, timeout: number, evaluation: MinMaxEvaluation) {
         this.board = new MinMaxBoard(columns, rows, inRow);
         const depthLimit = 10;
-        this.algoritm = new MinMaxAlgorithm(timeout, new InRowCountEvaluation(), depthLimit);
+        this.algoritm = new MinMaxAlgorithm(timeout, evaluation, depthLimit);
     }
 
     playerMove(move: number): void {

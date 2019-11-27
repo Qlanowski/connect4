@@ -7,6 +7,8 @@ import * as ReadLine from "readline-sync"
 import minimist from "minimist";
 import { HumanBot } from "./shared/human";
 import { MinMaxBot } from "./minmax/minMaxBot";
+import { InRowCountEvaluation } from "./minmax/evaluation/inRowCountEvaluation";
+import { ConstMatrixEvaluation } from "./minmax/evaluation/constMatrixEvaluation";
 
 type ArgumentsShape = {
     columns: string;
@@ -60,10 +62,10 @@ export function pickBot(id: number, game: Game, columns: number, rows: number, i
             bot = new PnsBot(columns, rows, inRowForWin, timeout);
             break;
         case 2:
-            bot = new MinMaxBot(columns, rows, inRowForWin, timeout);
+            bot = new MinMaxBot(columns, rows, inRowForWin, timeout, new InRowCountEvaluation());
             break;
         case 3:
-            bot = new HumanBot(game.board);
+            bot = new MinMaxBot(columns, rows, inRowForWin, timeout, new ConstMatrixEvaluation())
             break;
         case 3:
             bot = new HumanBot(game.board);
