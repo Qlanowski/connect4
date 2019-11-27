@@ -32,7 +32,7 @@ export class ConstMatrixEvaluation implements MinMaxEvaluation {
     }
 
     private validateBoard(board: MinMaxBoard) {
-        if(board.width !== 6 || board.height !== 7) {
+        if(board.width !== 7 || board.height !== 6) {
             throw new Error("invalid board size");
         }
     }
