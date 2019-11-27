@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { PlayerType } from '../../../../models/player-type';
+import { SelectInput } from '../game-config-form-styles';
 
 interface GameConfigPlayerSelectProps {
     handleChange: (playerType: PlayerType) => void;
@@ -15,12 +16,12 @@ export const GameConfigPlayerSelect: React.FC<GameConfigPlayerSelectProps> = ({h
     }
 
     return (
-        <select value={playerType} onChange={(event) => changePlayerType(event)}>
+        <SelectInput value={playerType} onChange={(event) => changePlayerType(event)}>
         {Object.keys(PlayerType).map(key => (
             <option key={key} value={key}>
                 {PlayerType[key]}
             </option>
         ))}
-    </select>
+    </SelectInput>
     );
 }

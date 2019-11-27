@@ -2,6 +2,7 @@ import * as React from 'react';
 import { GameConfig } from '../../../models/game-config';
 import { PlayerType } from '../../../models/player-type';
 import { GameConfigPlayerSelect } from './game-config-player-select/game-config-player.select';
+import { TextInput, PlayerChoiceContainer, PlayerChoiceColumn, SubmitInput, FormContainer } from './game-config-form-styles';
 
 interface GameConfigFormProps {
     handleSubmit: (config: GameConfig) => void;
@@ -9,7 +10,7 @@ interface GameConfigFormProps {
 
 export const GameConfigForm: React.FC<GameConfigFormProps> = ({ handleSubmit }) => {
     const initialConfig: GameConfig = {
-        playerOne: PlayerType.Human, 
+        playerOne: PlayerType.Human,
         playerTwo: PlayerType.Human,
         boardColumns: 5,
         boardRows: 5,
@@ -30,40 +31,49 @@ export const GameConfigForm: React.FC<GameConfigFormProps> = ({ handleSubmit }) 
     }
 
     const handlePlayerTypeChange = (playerType: PlayerType, key: keyof GameConfig): void => {
-        setFormConfig({...formConfig, [key]: playerType});
+        setFormConfig({ ...formConfig, [key]: playerType });
     }
 
     return (
-        <form onSubmit={(event) => onSubmit(event, formConfig)}>
-        <label>
-          Board rows:
-          <input min="0" type="number" onChange={(event) => handleNumberChange(event, "boardRows")} />
-        </label>
-        <label>
-            Board columns:
-          <input min="0" type="number" onChange={(event) => handleNumberChange(event, "boardColumns")} />
-        </label>
-        <label>
-            Ms for algorithm:
-          <input min="0" type="number" 
-          onChange={(event) => handleNumberChange(event, "milisecondsForAlgorithm")} />
-        </label>
-        <label>
-            To win:
-          <input min="0" type="number" 
-          onChange={(event) => handleNumberChange(event, "toWin")} />
-        </label>
-        <label>Player one:
-            <GameConfigPlayerSelect initialValue={initialConfig.playerOne}
-            handleChange={(playerType) => handlePlayerTypeChange(playerType, "playerOne")}>
-            </GameConfigPlayerSelect>
-        </label>
-        <label>Player two:
-            <GameConfigPlayerSelect initialValue={initialConfig.playerTwo}
-            handleChange={(playerType) => handlePlayerTypeChange(playerType, "playerTwo")}>
-            </GameConfigPlayerSelect>
-        </label>
-        <input type="submit" value="Rozpocznij grę!"></input>
-        </form>
+        <FormContainer>
+            <form onSubmit={(event) => onSubmit(event, formConfig)}>
+                <label>
+                    Board rows:
+          <TextInput min="0" onChange={(event) => handleNumberChange(event, "boardRows")} />
+                </label>
+                <label>
+                    Board columns:
+          <TextInput min="0" onChange={(event) => handleNumberChange(event, "boardColumns")} />
+                </label>
+                <label>
+                    Ms for algorithm:
+          <TextInput min="0"
+                        onChange={(event) => handleNumberChange(event, "milisecondsForAlgorithm")} />
+                </label>
+                <label>
+                    To win:
+          <TextInput min="0"
+                        onChange={(event) => handleNumberChange(event, "toWin")} />
+                </label>
+                <PlayerChoiceContainer>
+                    <PlayerChoiceColumn>
+                        <label>Player one:
+                <GameConfigPlayerSelect initialValue={initialConfig.playerOne}
+                                handleChange={(playerType) => handlePlayerTypeChange(playerType, "playerOne")}>
+                            </GameConfigPlayerSelect>
+                        </label>
+                    </PlayerChoiceColumn>
+
+                    <PlayerChoiceColumn>
+                        <label>Player two:
+                <GameConfigPlayerSelect initialValue={initialConfig.playerTwo}
+                                handleChange={(playerType) => handlePlayerTypeChange(playerType, "playerTwo")}>
+                            </GameConfigPlayerSelect>
+                        </label>
+                    </PlayerChoiceColumn>
+                </PlayerChoiceContainer>
+                <SubmitInput value="Start game!"></SubmitInput>
+            </form>
+        </FormContainer>
     )
 }
