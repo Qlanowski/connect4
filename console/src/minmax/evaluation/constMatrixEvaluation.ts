@@ -19,7 +19,7 @@ export class ConstMatrixEvaluation implements MinMaxEvaluation {
         for (let x = 0; x < board.width; x++) {
             for (let y = 0; y < board.height; y++) {
                 if (board.getField(x, y) === player) {
-                    score += this.scoreMatrix[x][y];
+                    score += this.scoreMatrix[y][x];
                 }
             }
         }
