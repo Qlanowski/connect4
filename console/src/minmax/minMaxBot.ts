@@ -39,7 +39,7 @@ export class MinMaxBot implements Bot {
             let score = this.algoritm.getScore(this.board, this.opponentPlayer);
             this.board.undoLastMove();
 
-            console.log(`move: ${move}, score: ${score}`);
+            console.debug(`move: ${move}, score: ${score}`);
             if(bestScore > score) {
                 bestScore = score;
                 bestMove = move;

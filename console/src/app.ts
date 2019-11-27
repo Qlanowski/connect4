@@ -79,14 +79,18 @@ function run(columns: number, rows: number, inRowForWin: number, bot0Id: number,
 
     while (game.gameOn()) {
         if (turn === 0) {
+            let startTime = new Date().getTime();
             let move = bot0.makeMove();
+            console.debug(`Move done in ${new Date().getTime() - startTime} ms`);
             bot1.playerMove(move);
             game.move(move, turn);
             turn = 1;
             game.printBoard();
         }
         else {
+            let startTime = new Date().getTime();
             let move = bot1.makeMove();
+            console.debug(`Move done in ${new Date().getTime() - startTime} ms`);
             bot0.playerMove(move);
             game.move(move, turn);
             turn = 0;
