@@ -52,23 +52,25 @@ export class Game {
 
 export function printBoard(board: Board): void {
     for (let y = board.rows - 1; y >= 0; y--) {
+        let row = "";
         for (let x = 0; x < board.columns; x++) {
             switch (board.board[x][y]) {
                 case Player.None:
-                    process.stdout.write("-");
+                    row += "-";
                     break;
                 case Player.Player0:
-                    process.stdout.write("O");
+                    row += "O";
                     break;
                 case Player.Player1:
-                    process.stdout.write("X");
+                    row += "X";
                     break;
             }
         }
-        process.stdout.write("\n");
+        console.log(row);
     }
+    let rowNumbers = "";
     for (let x = 0; x < board.columns; x++) {
-        process.stdout.write(x.toString());
+        rowNumbers += x.toString();
     }
-    console.log("\n");
+    console.log(rowNumbers);
 }

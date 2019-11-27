@@ -10,6 +10,7 @@ export class Board {
     private _result: Result;
     private _lastX: number;
     private _lastY: number;
+    private _moveCounter: number = 0;
 
     public get board(): Player[][] {
         return JSON.parse(JSON.stringify(this._board));
@@ -23,7 +24,18 @@ export class Board {
     public get columns(): number {
         return this._columns;
     }
-
+    public get moveCounter(): number {
+        return this._moveCounter;
+    }
+    public get inRow(): number {
+        return this._inRow;
+    }
+    public get lastX(): number {
+        return this._lastX
+    }
+    public get lastY(): number {
+        return this._lastY
+    }
 
     constructor(columns: number, rows: number, inRow: number, board: Player[][], heights: number[]) {
         this._columns = columns;
@@ -58,6 +70,7 @@ export class Board {
         this._lastX = col;
         this._lastY = height;
         this._result = this.getResult();
+        this._moveCounter++;
     }
 
     public getResult(): Result {

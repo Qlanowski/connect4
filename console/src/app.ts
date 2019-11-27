@@ -6,6 +6,7 @@ import { Game } from "./shared/game";
 import * as ReadLine from "readline-sync"
 import minimist from "minimist";
 import { HumanBot } from "./shared/human";
+import { MinMaxBot } from "./minmax/minMaxBot";
 
 type ArgumentsShape = {
     columns: string;
@@ -59,7 +60,10 @@ export function pickBot(id: number, game: Game, columns: number, rows: number, i
             bot = new PnsBot(columns, rows, inRowForWin, timeout);
             break;
         case 2:
-            bot = new McstBot(columns, rows, inRowForWin, timeout);
+            bot = new MinMaxBot(columns, rows, inRowForWin, timeout);
+            break;
+        case 3:
+            bot = new HumanBot(game.board);
             break;
         case 3:
             bot = new HumanBot(game.board);
@@ -75,14 +79,18 @@ function run(columns: number, rows: number, inRowForWin: number, bot0Id: number,
 
     while (game.gameOn()) {
         if (turn === 0) {
+            let startTime = new Date().getTime();
             let move = bot0.makeMove();
+            console.debug(`Move done in ${new Date().getTime() - startTime} ms`);
             bot1.playerMove(move);
             game.move(move, turn);
             turn = 1;
             game.printBoard();
         }
         else {
+            let startTime = new Date().getTime();
             let move = bot1.makeMove();
+            console.debug(`Move done in ${new Date().getTime() - startTime} ms`);
             bot0.playerMove(move);
             game.move(move, turn);
             turn = 0;
