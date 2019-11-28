@@ -22,7 +22,7 @@ const GameBoardCircle = styled.div`
     background-color: ${props => props.circleColor};
     overflow:hidden;
     background-image: url(${props => props.showCross ? cross : ''});
-    background-size: 70%;
+    background-size: 60%;
     background-repeat: no-repeat;
     background-position: center;
 `;
