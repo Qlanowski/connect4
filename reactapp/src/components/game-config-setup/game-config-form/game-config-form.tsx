@@ -31,7 +31,7 @@ export const GameConfigForm: React.FC<GameConfigFormProps> = ({ handleSubmit }) 
     }
 
     const handlePlayerTypeChange = (playerType: PlayerType, key: keyof GameConfig): void => {
-        setFormConfig({ ...formConfig, [key]: playerType });
+        setFormConfig({ ...formConfig, [key]: PlayerType[playerType] });
     }
 
     return (

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { Player } from '../../models/imported';
 import { Tile } from '../../models/tile';
 import { Result } from '../../models/imported';
-import { GameBoard } from './game-board/game-board';
 import { GameState } from '../../models/game-state';
 import {
     gameStateMoveMadeActionCreator, gameStateGameRestartedActionCreator,
@@ -13,8 +12,7 @@ import {
 } from '../../redux/reducers/game-state-reducer/game-state-action-creators';
 import { GamePanelSidebar } from './game-panel-sidebar/game-panel-sidebar';
 import { GameConfig } from '../../models/game-config';
-import { Bot } from '../../../../console/src/shared/bot';
-import { BotWorkerService } from '../../services/bot/bot-worker-service';
+import { GameBoardMovesResolver } from './game-moves-container/game-board-moves-resolver';
 
 
 const GamePanelContainer = styled.div
@@ -37,45 +35,11 @@ interface GamePanelProps {
     gameConfig: GameConfig;
 }
 
-const botWorkerService = new BotWorkerService();
-
 const GamePanelDisconnected: React.FC<GamePanelProps> = ({ board, playerMoving, makeMove, result, restartGame, newGame, gameConfig }) => {
-    const [isBotMakingMove, setIsBotMakingMove] = React.useState<boolean>(false);
-
-
-    React.useEffect(() => {
-        const callback = (event) => {
-            setIsBotMakingMove(false);
-            if (event.data !== null)
-                makeMove(event.data);
-        };
-        
-        botWorkerService.subscribeToBotMove(callback);
-
-        return () => botWorkerService.unsubscribeFromBotMove(callback);
-    }, []);
-
-    React.useEffect(() => {
-        if (result === Result.GameOn)
-            botWorkerService.initializeBots(gameConfig);
-    }, [result]);
-
-    React.useEffect(() => {
-        if (result === Result.GameOn) {
-            setIsBotMakingMove(true);
-            botWorkerService.makeMove(playerMoving);
-        }
-    }, [playerMoving])
-
-    const handleColumnClick = (column: number): void => {
-        if (result !== Result.GameOn || isBotMakingMove)
-            return;
-        botWorkerService.moveMade(playerMoving, column);
-        makeMove(column);
-    }
     return (
         <GamePanelContainer>
-            <GameBoard board={board} onColumnClick={handleColumnClick}></GameBoard>
+            <GameBoardMovesResolver gameConfig={gameConfig} playerMoving={playerMoving} board={board} result={result}
+             handleMove={(column) => makeMove(column)}></GameBoardMovesResolver>
             <GamePanelSidebar playerMoving={playerMoving} result={result}
                 gameRestarted={() => restartGame()} newGame={() => newGame()}
             ></GamePanelSidebar>

@@ -1,5 +1,5 @@
-import { Tile } from "../../../../../models/tile";
-import { Player } from "../../../../../models/imported";
+import { Tile } from "../../../../../../models/tile";
+import { Player } from "../../../../../../models/imported";
 import * as React from 'react';
 import styled from 'styled-components';
 const cross = require('./cross.png');
@@ -21,6 +21,10 @@ const GameBoardCircle = styled.div`
     border-radius: 50%;
     background-color: ${props => props.circleColor};
     overflow:hidden;
+    background-image: url(${props => props.showCross ? cross : ''});
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
 `;
 
 const GameBoardCross = styled.img`
@@ -43,8 +47,7 @@ export const GameBoardTile: React.FC<GameBoardTileProps> = ({tile}) => {
     const tileCircleColor = getTileCircleColor(tile.playerOcupping);
     return (
     <GameBoardTileContainer>
-        <GameBoardCircle circleColor={tileCircleColor}> 
-            { tile.isWinningMove ? <GameBoardCross src={cross}></GameBoardCross> : null }
+        <GameBoardCircle circleColor={tileCircleColor} showCross={tile.isWinningMove}> 
         </GameBoardCircle>
     </GameBoardTileContainer>
     )
